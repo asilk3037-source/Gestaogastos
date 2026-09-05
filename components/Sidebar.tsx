@@ -24,7 +24,7 @@ export function Sidebar() {
   const withQuery = (href: string) => (qs ? `${href}${href.includes("?") ? "&" : "?"}${qs}` : href);
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r border-base-border bg-base-850 px-4 py-5 lg:flex">
+    <aside className="hidden w-64 shrink-0 flex-col rounded-[26px] border border-base-border bg-base-850 px-4 py-5 shadow-card m-3 lg:flex">
       <div className="mb-4 flex items-center gap-2.5 px-2 pb-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-b from-brand-light to-brand text-[13px] font-semibold text-white">
           L

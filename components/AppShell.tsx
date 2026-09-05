@@ -20,11 +20,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex min-h-0 flex-1">
-          <Suspense fallback={<div className="hidden w-60 shrink-0 lg:block" />}>
+          <Suspense fallback={<div className="hidden w-64 shrink-0 lg:block" />}>
             <Sidebar />
           </Suspense>
           <div className="flex min-w-0 flex-1 flex-col">
-            <main className="flex-1 px-5 pb-28 pt-6 sm:px-7 lg:px-10 lg:pb-12 lg:pt-9">{children}</main>
+            <main className="flex-1 px-5 pb-28 pt-6 sm:px-7 lg:pb-12 lg:pl-6 lg:pr-10 lg:pt-9">{children}</main>
           </div>
         </div>
       </div>
