@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/queries";
 
+export const dynamic = "force-dynamic";
+
 /** Exportação/backup em JSON legível (spec §14 — requisito não funcional). */
 export async function GET() {
   const user = await getCurrentUser();

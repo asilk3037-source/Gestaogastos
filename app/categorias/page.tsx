@@ -8,6 +8,8 @@ import { centsToBRL } from "@/lib/format";
 import { getCurrentUser, listCategories } from "@/lib/queries";
 import { createCategory, deactivateCategory } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 const PALETTE = ["#0a84ff", "#5e5cd6", "#bf5af2", "#32ade6", "#30d158", "#ff9f0a", "#ff375f", "#8e8e93"];
 
 export default async function CategoriasPage() {
