@@ -17,7 +17,7 @@ export function PageHeader({
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
-        <h1 className="text-xl font-semibold text-white sm:text-2xl">{title}</h1>
+        <h1 className="text-xl font-semibold text-slate-100 sm:text-2xl">{title}</h1>
         {subtitle && <p className="text-sm text-slate-400">{subtitle}</p>}
       </div>
       <div className="flex flex-wrap items-center gap-3">

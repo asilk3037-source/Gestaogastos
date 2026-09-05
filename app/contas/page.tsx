@@ -24,7 +24,7 @@ export default async function ContasPage() {
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <Card>
-          <h2 className="mb-4 text-base font-semibold text-white">+ Nova forma de pagamento</h2>
+          <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova forma de pagamento</h2>
           <form action={createPaymentMethod} className="space-y-3">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
@@ -50,7 +50,7 @@ export default async function ContasPage() {
 
         <Card className="!p-0 overflow-hidden">
           <div className="p-4 sm:p-5">
-            <h2 className="text-base font-semibold text-white">Contas cadastradas</h2>
+            <h2 className="text-base font-semibold text-slate-100">Contas cadastradas</h2>
           </div>
           <ul className="divide-y divide-base-border/60">
             {methods.map((m) => (

@@ -221,7 +221,7 @@ export async function createCategory(formData: FormData) {
   const user = await getCurrentUser();
   const name = String(formData.get("name") ?? "").trim();
   const icon = String(formData.get("icon") ?? "tag");
-  const color = String(formData.get("color") ?? "#8b5cf6");
+  const color = String(formData.get("color") ?? "#0a84ff");
   const defaultLimitCents = brlToCents(String(formData.get("defaultLimit") ?? "0"));
 
   if (!name) throw new Error("Nome da categoria é obrigatório.");

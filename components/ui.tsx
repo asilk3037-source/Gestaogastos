@@ -39,7 +39,7 @@ export function StatCard({
         <span className="text-sm text-slate-400">{label}</span>
       </div>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-2xl font-semibold text-white sm:text-[26px]">{value}</span>
+        <span className="text-2xl font-semibold text-slate-100 sm:text-[26px]">{value}</span>
         {trend && (
           <span className={`text-xs font-medium ${trend.positive ? "text-good" : "text-bad"}`}>
             {trend.label}
@@ -51,10 +51,10 @@ export function StatCard({
 }
 
 const ALERT_COLORS: Record<AlertLevel, string> = {
-  normal: "#8b5cf6",
-  atencao: "#fbbf24",
-  atingido: "#fb923c",
-  excedido: "#f87171",
+  normal: "#0a84ff",
+  atencao: "#ff9f0a",
+  atingido: "#ff6d00",
+  excedido: "#ff3b30",
 };
 
 export function alertColor(level: AlertLevel): string {
@@ -73,7 +73,7 @@ export function ProgressBar({
     <div className="progress-track">
       <div
         className="progress-fill"
-        style={{ width: `${clamped}%`, backgroundColor: color ?? "#8b5cf6" }}
+        style={{ width: `${clamped}%`, backgroundColor: color ?? "#0a84ff" }}
       />
     </div>
   );
@@ -83,7 +83,7 @@ export function AlertBadge({ level, children }: { level: AlertLevel; children: R
   const styles: Record<AlertLevel, string> = {
     normal: "bg-brand-soft/40 text-brand-light",
     atencao: "bg-warn/15 text-warn",
-    atingido: "bg-orange-500/15 text-orange-400",
+    atingido: "bg-orange-500/15 text-orange-600",
     excedido: "bg-bad/15 text-bad",
   };
   return (
@@ -124,7 +124,7 @@ export function EmptyState({ title, description }: { title: string; description?
 export function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
     <div className="mb-4 flex items-center justify-between">
-      <h2 className="text-base font-semibold text-white">{children}</h2>
+      <h2 className="text-base font-semibold text-slate-100">{children}</h2>
       {action}
     </div>
   );

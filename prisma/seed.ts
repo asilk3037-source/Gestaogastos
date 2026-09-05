@@ -10,12 +10,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const CATEGORIES = [
-  { name: "Transporte (Uber/99)", icon: "car", color: "#6366f1", limit: 15000 },
-  { name: "Alimentação / delivery", icon: "utensils", color: "#f59e0b", limit: 15000 },
-  { name: "Assinaturas", icon: "credit-card", color: "#3b82f6", limit: 10000 },
-  { name: "Lazer", icon: "gamepad", color: "#f43f5e", limit: 10000 },
-  { name: "Pet", icon: "paw", color: "#10b981", limit: 5000 },
-  { name: "Outros / compras pessoais", icon: "shopping-bag", color: "#38bdf8", limit: 5000 },
+  { name: "Transporte (Uber/99)", icon: "car", color: "#0a84ff", limit: 15000 },
+  { name: "Alimentação / delivery", icon: "utensils", color: "#ff9f0a", limit: 15000 },
+  { name: "Assinaturas", icon: "credit-card", color: "#5e5cd6", limit: 10000 },
+  { name: "Lazer", icon: "gamepad", color: "#ff375f", limit: 10000 },
+  { name: "Pet", icon: "paw", color: "#30d158", limit: 5000 },
+  { name: "Outros / compras pessoais", icon: "shopping-bag", color: "#64d2ff", limit: 5000 },
 ];
 
 // description, installmentAmountCents (valor cheio da parcela), totalInstallments,

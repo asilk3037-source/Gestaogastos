@@ -16,18 +16,18 @@ export function EvolutionChart({ data }: { data: EvolutionPoint[] }) {
         <AreaChart data={data} margin={{ left: -12, right: 8, top: 8, bottom: 0 }}>
           <defs>
             <linearGradient id="gastoFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.45} />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+              <stop offset="0%" stopColor="#0a84ff" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="#0a84ff" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="planejadoFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#22d3ee" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="#22d3ee" stopOpacity={0} />
+              <stop offset="0%" stopColor="#32ade6" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="#32ade6" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="#242240" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+          <CartesianGrid stroke="#e5e5ea" vertical={false} />
+          <XAxis dataKey="label" tick={{ fill: "#8a8a8e", fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis
-            tick={{ fill: "#94a3b8", fontSize: 11 }}
+            tick={{ fill: "#8a8a8e", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v: number) => Math.round(v / 100).toLocaleString("pt-BR")}
@@ -41,21 +41,22 @@ export function EvolutionChart({ data }: { data: EvolutionPoint[] }) {
               name === "gastoCents" ? "Gasto" : "Planejado",
             ]}
             contentStyle={{
-              background: "#16152a",
-              border: "1px solid #2a2843",
-              borderRadius: 8,
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.08)",
+              borderRadius: 10,
               fontSize: 12,
+              boxShadow: "0 10px 24px -12px rgba(0,0,0,0.25)",
             }}
-            labelStyle={{ color: "#e2e8f0" }}
+            labelStyle={{ color: "#1d1d1f", fontWeight: 600 }}
           />
           <Area
             type="monotone"
             dataKey="planejadoCents"
-            stroke="#22d3ee"
+            stroke="#32ade6"
             strokeWidth={2}
             fill="url(#planejadoFill)"
           />
-          <Area type="monotone" dataKey="gastoCents" stroke="#8b5cf6" strokeWidth={2} fill="url(#gastoFill)" />
+          <Area type="monotone" dataKey="gastoCents" stroke="#0a84ff" strokeWidth={2} fill="url(#gastoFill)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>

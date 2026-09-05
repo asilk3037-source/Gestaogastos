@@ -108,7 +108,7 @@ export default async function LancamentosPage({
 
         <Card id="lancamentos" className="overflow-hidden !p-0">
           <div className="flex items-center justify-between p-4 sm:p-5">
-            <h2 className="text-base font-semibold text-white">Lançamentos do mês</h2>
+            <h2 className="text-base font-semibold text-slate-100">Lançamentos do mês</h2>
             <span className="text-sm text-slate-400">{data.transactions.length} registro(s)</span>
           </div>
           <div className="overflow-x-auto">
@@ -151,7 +151,7 @@ export default async function LancamentosPage({
                       </span>
                     </td>
                     <td className="px-5 py-3 text-slate-400">{t.paymentMethod?.name ?? "—"}</td>
-                    <td className="whitespace-nowrap px-5 py-3 text-right font-medium text-white">
+                    <td className="whitespace-nowrap px-5 py-3 text-right font-medium text-slate-100">
                       {centsToBRL(t.amountCents)}
                     </td>
                     <td className="px-2 py-3 text-right">

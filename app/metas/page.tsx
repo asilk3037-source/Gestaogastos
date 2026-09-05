@@ -50,7 +50,7 @@ export default async function MetasPage({
                   {realized != null ? `Sobra atual: ${centsToSignedBRL(realized)}` : "Informe a renda para calcular"}
                 </span>
               </div>
-              <ProgressBar percent={progressPercent} color="#34d399" />
+              <ProgressBar percent={progressPercent} color="#30d158" />
             </div>
           </div>
         )}

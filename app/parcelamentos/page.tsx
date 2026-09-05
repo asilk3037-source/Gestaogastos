@@ -125,7 +125,7 @@ export default async function ParcelamentosPage({
         <div className="space-y-4">
           <Card className="!p-0 overflow-hidden">
             <div className="flex items-center justify-between p-4 sm:p-5">
-              <h2 className="text-base font-semibold text-white">Ativos em {monthLabel(year, month)}</h2>
+              <h2 className="text-base font-semibold text-slate-100">Ativos em {monthLabel(year, month)}</h2>
               <span className="text-sm font-medium text-slate-300">{centsToBRL(totalPessoal)}</span>
             </div>
             <div className="overflow-x-auto">
@@ -165,7 +165,7 @@ export default async function ParcelamentosPage({
                           {state!.status === "ultima" ? "Última" : "Ativo"}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-white">
+                      <td className="px-5 py-3 text-right font-medium text-slate-100">
                         {centsToBRL(state!.personalValueCents)}
                         {inst.personalPercentage < 1 && (
                           <span className="ml-1 text-xs font-normal text-slate-500">

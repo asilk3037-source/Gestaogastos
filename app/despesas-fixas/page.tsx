@@ -101,7 +101,7 @@ export default async function DespesasFixasPage({
 
         <Card className="!p-0 overflow-hidden">
           <div className="p-4 sm:p-5">
-            <h2 className="text-base font-semibold text-white">Despesas cadastradas</h2>
+            <h2 className="text-base font-semibold text-slate-100">Despesas cadastradas</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] text-sm">
@@ -155,7 +155,7 @@ export default async function DespesasFixasPage({
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-white">
+                      <td className="px-5 py-3 text-right font-medium text-slate-100">
                         {state ? centsToBRL(state.personalValueCents) : "—"}
                       </td>
                       <td className="px-2 py-3 text-right">

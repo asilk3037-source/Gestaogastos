@@ -51,7 +51,7 @@ model Category {
   user              User     @relation(fields: [userId], references: [id])
   name              String
   icon              String   @default("tag")
-  color             String   @default("#8b5cf6")
+  color             String   @default("#0a84ff")
   defaultLimitCents Int      @default(0)
   active            Boolean  @default(true)
   sortOrder         Int      @default(0)

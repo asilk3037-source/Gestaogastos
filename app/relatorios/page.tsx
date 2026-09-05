@@ -60,7 +60,7 @@ export default async function RelatoriosPage({
                     <td className="px-5 py-3 font-medium text-slate-100">{monthLabel(p.year, p.month)}</td>
                     <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.totalComprometido)}</td>
                     <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.tetoTotal)}</td>
-                    <td className="px-5 py-3 text-right font-medium text-white">{centsToBRL(summary.planejadoTotal)}</td>
+                    <td className="px-5 py-3 text-right font-medium text-slate-100">{centsToBRL(summary.planejadoTotal)}</td>
                     <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.gastoTotalMes)}</td>
                     <td className="px-5 py-3 text-right">
                       {summary.sobraPrevista != null ? (

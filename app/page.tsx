@@ -41,7 +41,7 @@ export default async function DashboardPage({
 
   const donutData = data.categories.map((c) => ({ name: c.name, value: c.spentCents, color: c.color }));
   const installmentsTotal = data.installmentStates.reduce((s, i) => s + i.personalValueCents, 0);
-  donutData.push({ name: "Parcelamentos", value: installmentsTotal, color: "#a78bfa" });
+  donutData.push({ name: "Parcelamentos", value: installmentsTotal, color: "#bf5af2" });
 
   const gastoTotalMes = data.summary.gastoTotalMes;
   const tetoUsedPercent = data.summary.tetoTotal > 0 ? (data.summary.gastoRealTotal / data.summary.tetoTotal) * 100 : 0;
@@ -81,19 +81,19 @@ export default async function DashboardPage({
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
           icon={ArrowUpRight}
-          iconColor="#34d399"
+          iconColor="#30d158"
           label="Receita do mês"
           value={centsToBRL(data.month.netIncomeCents)}
         />
         <StatCard
           icon={ArrowDownRight}
-          iconColor="#f87171"
+          iconColor="#ff3b30"
           label="Total de gastos"
           value={centsToBRL(gastoTotalMes)}
         />
         <StatCard
           icon={Wallet}
-          iconColor="#8b5cf6"
+          iconColor="#0a84ff"
           label="Saldo do mês"
           value={data.summary.sobraReal != null ? centsToSignedBRL(data.summary.sobraReal) : "—"}
           trend={
@@ -104,7 +104,7 @@ export default async function DashboardPage({
         />
         <StatCard
           icon={Target}
-          iconColor="#22d3ee"
+          iconColor="#32ade6"
           label="Teto de gastos novos"
           value={`${percentLabel(tetoUsedPercent)}`}
         />
@@ -168,7 +168,7 @@ export default async function DashboardPage({
                 <li key={idx} className="flex items-center justify-between gap-3 text-sm">
                   <span className="text-slate-300">{c.label}</span>
                   <span className="flex items-center gap-2">
-                    <span className="font-medium text-white">{centsToBRL(c.valueCents)}</span>
+                    <span className="font-medium text-slate-100">{centsToBRL(c.valueCents)}</span>
                     <span className="rounded-full bg-bad/15 px-2 py-0.5 text-[11px] font-medium text-bad">
                       {c.tag}
                     </span>
@@ -177,7 +177,7 @@ export default async function DashboardPage({
               ))}
               <li className="flex items-center justify-between border-t border-base-border pt-3 text-sm font-semibold">
                 <span className="text-slate-200">Total comprometido</span>
-                <span className="text-white">{centsToBRL(data.summary.totalComprometido)}</span>
+                <span className="text-slate-100">{centsToBRL(data.summary.totalComprometido)}</span>
               </li>
             </ul>
           )}
@@ -193,7 +193,7 @@ export default async function DashboardPage({
           >
             Teto de gastos novos
           </SectionTitle>
-          <ProgressBar percent={tetoUsedPercent} color="#8b5cf6" />
+          <ProgressBar percent={tetoUsedPercent} color="#0a84ff" />
           <ul className="mt-4 space-y-3">
             {data.categories.map((c) => (
               <li key={c.id} className="flex items-center gap-3">

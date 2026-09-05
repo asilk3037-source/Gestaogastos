@@ -114,21 +114,21 @@ export default async function PlanejamentoPage({
                       {f.totalMonths ? `${f.monthsElapsed}/${f.totalMonths}${f.isLast ? " · última" : ""}` : "recorrente"}
                       {f.personName ? ` · ${f.personName} compartilha` : ""}
                     </td>
-                    <td className="py-2.5 text-right font-medium text-white">{centsToBRL(f.personalValueCents)}</td>
+                    <td className="py-2.5 text-right font-medium text-slate-100">{centsToBRL(f.personalValueCents)}</td>
                   </tr>
                 ))}
               {data.installmentStates.length > 0 && (
                 <tr className="border-t border-base-border/60">
                   <td className="py-2.5 text-slate-100">Parcelamentos do cartão</td>
                   <td className="py-2.5 text-slate-500">{data.installmentStates.length} parcela(s) ativa(s)</td>
-                  <td className="py-2.5 text-right font-medium text-white">
+                  <td className="py-2.5 text-right font-medium text-slate-100">
                     {centsToBRL(data.installmentStates.reduce((s, i) => s + i.personalValueCents, 0))}
                   </td>
                 </tr>
               )}
               <tr className="border-t border-base-border font-semibold">
                 <td className="py-2.5 text-slate-200" colSpan={2}>Total comprometido</td>
-                <td className="py-2.5 text-right text-white">{centsToBRL(data.summary.totalComprometido)}</td>
+                <td className="py-2.5 text-right text-slate-100">{centsToBRL(data.summary.totalComprometido)}</td>
               </tr>
             </tbody>
           </table>

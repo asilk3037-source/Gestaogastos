@@ -11,6 +11,17 @@ categoria são configuráveis por competência, e qualquer mês futuro — inclu
 dezembro/2026 — é criado sob demanda ao ser aberto, com tetos padrão herdados do mês
 anterior/categoria.
 
+## Visual
+
+Interface inspirada num app nativo de macOS: janela com cantos arredondados, barra de
+título com os três botões (fechar/minimizar/maximizar), sidebar clara ao estilo
+Finder/Ajustes do Sistema (com um "ícone de app" colorido por seção) e paleta de sistema —
+cinza claro de fundo, cartões brancos, azul de sistema como cor de destaque e acentos vivos
+(verde, laranja, roxo, rosa, teal) para categorias e status. No mobile, a barra de janela
+some e a navegação inferior vira uma **Dock** flutuante e translúcida. Todos os tokens de
+cor ficam centralizados em `tailwind.config.ts` (`base`, `brand`, `slate`, `good`/`warn`/`bad`/`info`,
+`traffic`) — trocar o tema é editar um arquivo só.
+
 ## Stack
 
 - **Next.js 14** (App Router) + **TypeScript** + **Tailwind CSS**

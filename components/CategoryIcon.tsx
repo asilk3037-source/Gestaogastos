@@ -33,12 +33,12 @@ export function CategoryIcon({
   const Icon = ICONS[icon] ?? Tag;
   return (
     <span
-      className={`flex shrink-0 items-center justify-center rounded-lg ${className}`}
+      className={`flex shrink-0 items-center justify-center rounded-xl ${className}`}
       style={{
         width: size + 16,
         height: size + 16,
-        color: color ?? "#8b5cf6",
-        backgroundColor: `${color ?? "#8b5cf6"}22`,
+        color: color ?? "#0a84ff",
+        backgroundColor: `${color ?? "#0a84ff"}22`,
       }}
     >
       <Icon size={size} />

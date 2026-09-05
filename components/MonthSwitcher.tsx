@@ -20,7 +20,7 @@ export function MonthSwitcher({ year, month }: { year: number; month: number }) 
       <button
         aria-label="Mês anterior"
         onClick={() => go(prev.year, prev.month)}
-        className="rounded-full p-1.5 text-slate-400 hover:bg-base-800 hover:text-white"
+        className="rounded-full p-1.5 text-slate-400 hover:bg-base-800 hover:text-slate-100"
       >
         <ChevronLeft size={16} />
       </button>
@@ -31,7 +31,7 @@ export function MonthSwitcher({ year, month }: { year: number; month: number }) 
       <button
         aria-label="Próximo mês"
         onClick={() => go(next.year, next.month)}
-        className="rounded-full p-1.5 text-slate-400 hover:bg-base-800 hover:text-white"
+        className="rounded-full p-1.5 text-slate-400 hover:bg-base-800 hover:text-slate-100"
       >
         <ChevronRight size={16} />
       </button>

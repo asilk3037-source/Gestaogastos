@@ -20,7 +20,7 @@ export default async function PerfilPage() {
               <UserIcon size={22} />
             </span>
             <div>
-              <p className="font-medium text-white">{user.name}</p>
+              <p className="font-medium text-slate-100">{user.name}</p>
               <p className="text-sm text-slate-500">{user.email ?? "sem e-mail cadastrado"}</p>
             </div>
           </div>

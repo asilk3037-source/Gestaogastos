@@ -8,7 +8,7 @@ import { centsToBRL } from "@/lib/format";
 import { getCurrentUser, listCategories } from "@/lib/queries";
 import { createCategory, deactivateCategory } from "@/lib/actions";
 
-const PALETTE = ["#8b5cf6", "#6366f1", "#3b82f6", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e", "#38bdf8"];
+const PALETTE = ["#0a84ff", "#5e5cd6", "#bf5af2", "#32ade6", "#30d158", "#ff9f0a", "#ff375f", "#8e8e93"];
 
 export default async function CategoriasPage() {
   const user = await getCurrentUser();
@@ -20,7 +20,7 @@ export default async function CategoriasPage() {
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
         <Card>
-          <h2 className="mb-4 text-base font-semibold text-white">+ Nova categoria</h2>
+          <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova categoria</h2>
           <form action={createCategory} className="space-y-3">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
@@ -48,7 +48,7 @@ export default async function CategoriasPage() {
               <div className="flex flex-wrap gap-2">
                 {PALETTE.map((color) => (
                   <label key={color} className="cursor-pointer">
-                    <input type="radio" name="color" value={color} className="peer sr-only" defaultChecked={color === "#8b5cf6"} />
+                    <input type="radio" name="color" value={color} className="peer sr-only" defaultChecked={color === "#0a84ff"} />
                     <span
                       className="block h-7 w-7 rounded-full ring-offset-2 ring-offset-base-900 peer-checked:ring-2"
                       style={{ backgroundColor: color, "--tw-ring-color": color } as React.CSSProperties}
@@ -65,7 +65,7 @@ export default async function CategoriasPage() {
 
         <Card className="!p-0 overflow-hidden">
           <div className="p-4 sm:p-5">
-            <h2 className="text-base font-semibold text-white">Categorias cadastradas</h2>
+            <h2 className="text-base font-semibold text-slate-100">Categorias cadastradas</h2>
           </div>
           <ul className="divide-y divide-base-border/60">
             {categories.map((c) => (
