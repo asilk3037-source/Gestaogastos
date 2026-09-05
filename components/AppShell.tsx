@@ -5,8 +5,8 @@ import { WindowTitlebar } from "@/components/WindowTitlebar";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen lg:flex lg:items-start lg:justify-center lg:p-6">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col overflow-hidden bg-base-900 lg:min-h-[calc(100vh-3rem)] lg:rounded-window lg:border lg:border-black/10 lg:shadow-window">
+    <div className="min-h-screen p-2 sm:p-3 lg:flex lg:items-start lg:justify-center lg:p-6">
+      <div className="mx-auto flex min-h-[calc(100vh-1rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-black/10 bg-base-900 shadow-window sm:min-h-[calc(100vh-1.5rem)] sm:rounded-[28px] lg:min-h-[calc(100vh-3rem)] lg:rounded-window">
         {/* Titlebar — só no desktop, como a barra de título de um app Mac. */}
         <div className="relative hidden h-11 shrink-0 items-center border-b border-base-border bg-gradient-to-b from-[#f7f7f8] to-[#e9e9ec] px-4 lg:flex">
           <div className="flex items-center gap-2">

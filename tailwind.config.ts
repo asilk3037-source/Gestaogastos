@@ -58,9 +58,9 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 0 0 1px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.03), 0 10px 20px -14px rgba(0,0,0,0.18)",
-        window: "0 30px 60px -20px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.06)",
-        dock: "0 10px 30px -8px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)",
+        card: "0 0 0 1px rgba(0,0,0,0.05), 0 2px 5px rgba(0,0,0,0.06), 0 18px 36px -14px rgba(0,0,0,0.28)",
+        window: "0 30px 70px -18px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.06)",
+        dock: "0 14px 34px -8px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.05)",
       },
       borderRadius: {
         xl2: "1.5rem",
