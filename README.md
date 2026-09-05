@@ -25,9 +25,8 @@ cor ficam centralizados em `tailwind.config.ts` (`base`, `brand`, `slate`, `good
 ## Stack
 
 - **Next.js 14** (App Router) + **TypeScript** + **Tailwind CSS**
-- **Prisma** + **SQLite** (arquivo local `prisma/dev.db`) — troque `DATABASE_URL` no `.env`
-  para apontar a um Postgres (ex.: Supabase) sem alterar o schema, se preferir persistência
-  em nuvem
+- **Prisma** + **Postgres** — qualquer Postgres serve (Vercel Postgres/Neon, Supabase, um
+  container local); basta apontar `DATABASE_URL` no `.env`
 - **Recharts** para os gráficos do dashboard, **lucide-react** para ícones
 - **Vitest** para os testes das regras de cálculo
 - Mutações via **Server Actions** do Next.js (formulários HTML nativos, sem API REST
@@ -37,10 +36,16 @@ cor ficam centralizados em `tailwind.config.ts` (`base`, `brand`, `slate`, `good
 
 ```bash
 npm install
-cp .env.example .env        # DATABASE_URL="file:./dev.db"
-npm run db:push             # cria o schema no SQLite
+cp .env.example .env        # DATABASE_URL="postgresql://..." — aponte para o seu Postgres
+npm run db:push             # cria o schema no banco
 npm run db:seed             # popula com os dados iniciais (out–dez/2026)
 ```
+
+Não tem um Postgres à mão? A forma mais rápida é criar um gratuito no
+[Neon](https://neon.tech) ou no [Supabase](https://supabase.com) e colar a connection string
+no `DATABASE_URL`. Também funciona um Postgres local via Docker:
+`docker run --name gestao-db -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres` e
+`DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres"`.
 
 ## Execução
 
@@ -53,6 +58,19 @@ Build de produção:
 ```bash
 npm run build
 npm start
+```
+
+## Deploy (Vercel)
+
+O projeto está conectado à Vercel: todo push em `main` gera um deploy automático. Para
+funcionar, o projeto na Vercel precisa de uma variável de ambiente `DATABASE_URL` apontando
+para um Postgres real (Vercel Postgres/Neon, Supabase etc.) em **Project Settings → Environment
+Variables**. Depois de configurá-la (ou trocar de banco), rode uma vez, apontando para o banco
+de produção:
+
+```bash
+DATABASE_URL="<connection string de produção>" npx prisma db push
+DATABASE_URL="<connection string de produção>" npx tsx prisma/seed.ts
 ```
 
 ## Testes
@@ -109,7 +127,7 @@ sistema ganhar um app mobile nativo ou multiusuário.
 
 ## Banco de dados
 
-Modelo relacional (SQLite via Prisma) — nomes conforme sugerido na seção 10 da spec:
+Modelo relacional (Postgres via Prisma) — nomes conforme sugerido na seção 10 da spec:
 
 | Entidade | Papel |
 |---|---|

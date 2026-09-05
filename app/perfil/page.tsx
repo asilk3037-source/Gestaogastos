@@ -5,6 +5,8 @@ import { Card, Button, SectionTitle } from "@/components/ui";
 import { getCurrentUser } from "@/lib/queries";
 import { updateProfile } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function PerfilPage() {
   const user = await getCurrentUser();
 

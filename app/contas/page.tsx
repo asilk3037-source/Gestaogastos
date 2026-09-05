@@ -6,6 +6,8 @@ import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 import { getCurrentUser, listPaymentMethods } from "@/lib/queries";
 import { createPaymentMethod, deactivatePaymentMethod } from "@/lib/actions";
 
+export const dynamic = "force-dynamic";
+
 const TYPES = [
   { value: "credito", label: "Cartão de crédito" },
   { value: "debito", label: "Cartão de débito" },
