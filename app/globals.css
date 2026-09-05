@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue",
+    "Inter", Arial, sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  @apply text-slate-100 antialiased;
+  background: radial-gradient(120% 100% at 50% 0%, #f5f6f8 0%, #e6e8ec 60%, #dcdee3 100%);
+  background-attachment: fixed;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7c7cc;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aeaeb2;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.card {
+  @apply bg-base-900 border border-base-border rounded-xl2 shadow-card p-5 sm:p-6;
+}
+
+.progress-track {
+  @apply h-2 w-full rounded-full bg-base-700 overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full rounded-full transition-all;
+}
+
+.field-label {
+  @apply mb-1.5 block text-xs font-medium text-slate-400;
+}
+
+.field-input {
+  @apply w-full rounded-xl border border-base-border bg-base-800 px-3.5 py-2.5 text-sm text-slate-100 outline-none transition-colors placeholder:text-slate-500 focus:border-brand focus:bg-base-900 focus:ring-4 focus:ring-brand/15;
+}
+
+.field-select {
+  @apply field-input appearance-none;
+}
+
+/* Botão de janela estilo macOS (semáforo). */
+.traffic-dot {
+  @apply h-3 w-3 rounded-full;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
