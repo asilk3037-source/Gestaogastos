@@ -28,10 +28,10 @@ export default async function LancamentosPage({
         month={month}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card id="novo-lancamento">
           <SectionTitle>+ Novo gasto</SectionTitle>
-          <form action={createTransaction} className="space-y-3">
+          <form action={createTransaction} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="date">Data</label>
               <input className="field-input" type="date" id="date" name="date" defaultValue={todayISO} required />
@@ -107,7 +107,7 @@ export default async function LancamentosPage({
         </Card>
 
         <Card id="lancamentos" className="overflow-hidden !p-0">
-          <div className="flex items-center justify-between p-4 sm:p-5">
+          <div className="flex items-center justify-between p-5 sm:p-6">
             <h2 className="text-base font-semibold text-slate-100">Lançamentos do mês</h2>
             <span className="text-sm text-slate-400">{data.transactions.length} registro(s)</span>
           </div>
@@ -115,12 +115,12 @@ export default async function LancamentosPage({
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-y border-base-border text-left text-xs uppercase tracking-wide text-slate-500">
-                  <th className="px-5 py-2 font-medium">Data</th>
-                  <th className="px-5 py-2 font-medium">Descrição</th>
-                  <th className="px-5 py-2 font-medium">Categoria</th>
-                  <th className="px-5 py-2 font-medium">Forma</th>
-                  <th className="px-5 py-2 text-right font-medium">Valor</th>
-                  <th className="px-5 py-2" />
+                  <th className="px-5 py-2.5 font-medium">Data</th>
+                  <th className="px-5 py-2.5 font-medium">Descrição</th>
+                  <th className="px-5 py-2.5 font-medium">Categoria</th>
+                  <th className="px-5 py-2.5 font-medium">Forma</th>
+                  <th className="px-5 py-2.5 text-right font-medium">Valor</th>
+                  <th className="px-5 py-2.5" />
                 </tr>
               </thead>
               <tbody>
@@ -133,10 +133,10 @@ export default async function LancamentosPage({
                 )}
                 {data.transactions.map((t) => (
                   <tr key={t.id} className="border-b border-base-border/60 last:border-0">
-                    <td className="whitespace-nowrap px-5 py-3 text-slate-400">
+                    <td className="whitespace-nowrap px-5 py-3.5 text-slate-400">
                       {new Date(t.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
                     </td>
-                    <td className="px-5 py-3 text-slate-100">
+                    <td className="px-5 py-3.5 text-slate-100">
                       {t.description}
                       {t.necessary === false && (
                         <span className="ml-2 rounded-full bg-base-700 px-1.5 py-0.5 text-[10px] text-slate-400">
@@ -144,14 +144,14 @@ export default async function LancamentosPage({
                         </span>
                       )}
                     </td>
-                    <td className="px-5 py-3">
+                    <td className="px-5 py-3.5">
                       <span className="flex items-center gap-2 text-slate-300">
                         <CategoryIcon icon={t.category.icon} color={t.category.color} size={13} />
                         {t.category.name}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-slate-400">{t.paymentMethod?.name ?? "—"}</td>
-                    <td className="whitespace-nowrap px-5 py-3 text-right font-medium text-slate-100">
+                    <td className="px-5 py-3.5 text-slate-400">{t.paymentMethod?.name ?? "—"}</td>
+                    <td className="whitespace-nowrap px-5 py-3.5 text-right font-medium text-slate-100">
                       {centsToBRL(t.amountCents)}
                     </td>
                     <td className="px-2 py-3 text-right">

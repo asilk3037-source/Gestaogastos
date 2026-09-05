@@ -8,7 +8,7 @@ export function Card({
   ...rest
 }: React.HTMLAttributes<HTMLDivElement> & { children: ReactNode; className?: string }) {
   return (
-    <div className={`card p-4 sm:p-5 ${className}`} {...rest}>
+    <div className={`card ${className}`} {...rest}>
       {children}
     </div>
   );
@@ -28,10 +28,10 @@ export function StatCard({
   trend?: { label: string; positive: boolean };
 }) {
   return (
-    <Card className="flex flex-col gap-3">
+    <Card className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <span
-          className="flex h-9 w-9 items-center justify-center rounded-lg"
+          className="flex h-10 w-10 items-center justify-center rounded-2xl"
           style={{ backgroundColor: `${iconColor}22`, color: iconColor }}
         >
           <Icon size={18} />
@@ -99,7 +99,7 @@ export function Button({
   className = "",
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "ghost" | "danger" }) {
-  const base = "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors";
+  const base = "inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors";
   const variants = {
     primary: "bg-brand text-white hover:bg-brand-dark",
     ghost: "border border-base-border text-slate-200 hover:bg-base-800",
@@ -114,7 +114,7 @@ export function Button({
 
 export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-base-border py-10 text-center">
+    <div className="flex flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-base-border py-10 text-center">
       <p className="font-medium text-slate-300">{title}</p>
       {description && <p className="max-w-xs text-sm text-slate-500">{description}</p>}
     </div>

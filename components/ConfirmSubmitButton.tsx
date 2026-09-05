@@ -15,7 +15,7 @@ export function ConfirmSubmitButton({
   return (
     <button
       type="submit"
-      className={`rounded-lg p-2 transition-colors ${className}`}
+      className={`rounded-xl p-2 transition-colors ${className}`}
       onClick={(e) => {
         if (!window.confirm(message)) e.preventDefault();
       }}

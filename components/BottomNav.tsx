@@ -11,7 +11,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed inset-x-0 bottom-3 z-40 flex justify-center px-3 lg:hidden">
-      <div className="flex items-end gap-1.5 rounded-[22px] border border-white/60 bg-white/80 px-2.5 py-2 shadow-dock backdrop-blur-xl">
+      <div className="flex items-end gap-2.5 rounded-[26px] border border-white/60 bg-white/80 px-4 py-2.5 shadow-dock backdrop-blur-xl">
         {mobileNav.map((item) => {
           const active = pathname === item.href;
           const Icon = item.icon;
@@ -22,7 +22,7 @@ export function BottomNav() {
               className="flex flex-col items-center gap-1 rounded-2xl px-1.5 pt-0.5 text-[10px] font-medium text-slate-400 transition-transform active:scale-95"
             >
               <span
-                className="flex items-center justify-center rounded-[11px] text-white shadow-sm transition-all"
+                className="flex items-center justify-center rounded-2xl text-white shadow-sm transition-all"
                 style={{
                   backgroundColor: item.color,
                   width: active ? 40 : 34,

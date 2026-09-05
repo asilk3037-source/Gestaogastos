@@ -22,10 +22,10 @@ export default async function ContasPage() {
     <AppShell>
       <PageHeader title="Contas e formas de pagamento" subtitle="O cartão inicial ativo no planejamento é o 0283 — outros meios não entram automaticamente." />
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova forma de pagamento</h2>
-          <form action={createPaymentMethod} className="space-y-3">
+          <form action={createPaymentMethod} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
               <input className="field-input" id="name" name="name" placeholder="Ex: Cartão final 1234" required />
@@ -49,14 +49,14 @@ export default async function ContasPage() {
         </Card>
 
         <Card className="!p-0 overflow-hidden">
-          <div className="p-4 sm:p-5">
+          <div className="p-5 sm:p-6">
             <h2 className="text-base font-semibold text-slate-100">Contas cadastradas</h2>
           </div>
           <ul className="divide-y divide-base-border/60">
             {methods.map((m) => (
-              <li key={m.id} className="flex items-center justify-between gap-3 px-5 py-3">
+              <li key={m.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 text-brand-light">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand/15 text-brand-light">
                     <CreditCard size={16} />
                   </span>
                   <span>

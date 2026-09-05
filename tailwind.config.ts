@@ -63,8 +63,8 @@ const config: Config = {
         dock: "0 10px 30px -8px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.05)",
       },
       borderRadius: {
-        xl2: "1.15rem",
-        window: "1.15rem",
+        xl2: "1.5rem",
+        window: "1.35rem",
       },
     },
   },

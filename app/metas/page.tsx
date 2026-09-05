@@ -31,7 +31,7 @@ export default async function MetasPage({
     <AppShell>
       <PageHeader title="Metas" subtitle="Meta de reserva do mês e próximos passos do sistema." year={year} month={month} />
 
-      <Card className="mb-4 lg:mb-6">
+      <Card className="mb-6 lg:mb-8">
         <SectionTitle>Meta de reserva</SectionTitle>
         {reserveTarget === 0 ? (
           <p className="text-sm text-slate-400">

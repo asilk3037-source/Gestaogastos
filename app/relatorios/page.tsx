@@ -41,12 +41,12 @@ export default async function RelatoriosPage({
           <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-base-border text-left text-xs uppercase tracking-wide text-slate-500">
-                <th className="px-5 py-3 font-medium">Mês</th>
-                <th className="px-5 py-3 text-right font-medium">Comprometido</th>
-                <th className="px-5 py-3 text-right font-medium">Teto de gastos</th>
-                <th className="px-5 py-3 text-right font-medium">Planejado</th>
-                <th className="px-5 py-3 text-right font-medium">Gasto real</th>
-                <th className="px-5 py-3 text-right font-medium">Sobra prevista</th>
+                <th className="px-5 py-3.5 font-medium">Mês</th>
+                <th className="px-5 py-3.5 text-right font-medium">Comprometido</th>
+                <th className="px-5 py-3.5 text-right font-medium">Teto de gastos</th>
+                <th className="px-5 py-3.5 text-right font-medium">Planejado</th>
+                <th className="px-5 py-3.5 text-right font-medium">Gasto real</th>
+                <th className="px-5 py-3.5 text-right font-medium">Sobra prevista</th>
               </tr>
             </thead>
             <tbody>
@@ -57,12 +57,12 @@ export default async function RelatoriosPage({
                     key={`${p.year}-${p.month}`}
                     className={`border-b border-base-border/60 last:border-0 ${isSelected ? "bg-brand/5" : ""}`}
                   >
-                    <td className="px-5 py-3 font-medium text-slate-100">{monthLabel(p.year, p.month)}</td>
-                    <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.totalComprometido)}</td>
-                    <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.tetoTotal)}</td>
-                    <td className="px-5 py-3 text-right font-medium text-slate-100">{centsToBRL(summary.planejadoTotal)}</td>
-                    <td className="px-5 py-3 text-right text-slate-300">{centsToBRL(summary.gastoTotalMes)}</td>
-                    <td className="px-5 py-3 text-right">
+                    <td className="px-5 py-3.5 font-medium text-slate-100">{monthLabel(p.year, p.month)}</td>
+                    <td className="px-5 py-3.5 text-right text-slate-300">{centsToBRL(summary.totalComprometido)}</td>
+                    <td className="px-5 py-3.5 text-right text-slate-300">{centsToBRL(summary.tetoTotal)}</td>
+                    <td className="px-5 py-3.5 text-right font-medium text-slate-100">{centsToBRL(summary.planejadoTotal)}</td>
+                    <td className="px-5 py-3.5 text-right text-slate-300">{centsToBRL(summary.gastoTotalMes)}</td>
+                    <td className="px-5 py-3.5 text-right">
                       {summary.sobraPrevista != null ? (
                         <span className={summary.sobraPrevista >= 0 ? "text-good" : "text-bad"}>
                           {centsToSignedBRL(summary.sobraPrevista)}

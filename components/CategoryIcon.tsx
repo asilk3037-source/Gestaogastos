@@ -33,7 +33,7 @@ export function CategoryIcon({
   const Icon = ICONS[icon] ?? Tag;
   return (
     <span
-      className={`flex shrink-0 items-center justify-center rounded-xl ${className}`}
+      className={`flex shrink-0 items-center justify-center rounded-2xl ${className}`}
       style={{
         width: size + 16,
         height: size + 16,

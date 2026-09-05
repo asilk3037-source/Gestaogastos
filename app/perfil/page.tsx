@@ -12,7 +12,7 @@ export default async function PerfilPage() {
     <AppShell>
       <PageHeader title="Perfil" subtitle="Dados da conta e backup dos seus dados." />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <SectionTitle>Dados pessoais</SectionTitle>
           <div className="mb-4 flex items-center gap-3">
@@ -24,7 +24,7 @@ export default async function PerfilPage() {
               <p className="text-sm text-slate-500">{user.email ?? "sem e-mail cadastrado"}</p>
             </div>
           </div>
-          <form action={updateProfile} className="space-y-3">
+          <form action={updateProfile} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
               <input className="field-input" id="name" name="name" defaultValue={user.name} required />

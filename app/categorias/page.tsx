@@ -18,10 +18,10 @@ export default async function CategoriasPage() {
     <AppShell>
       <PageHeader title="Categorias" subtitle="Tetos padrão usados ao abrir uma nova competência." />
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova categoria</h2>
-          <form action={createCategory} className="space-y-3">
+          <form action={createCategory} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
               <input className="field-input" id="name" name="name" placeholder="Ex: Educação" required />
@@ -36,7 +36,7 @@ export default async function CategoriasPage() {
                 {CATEGORY_ICON_OPTIONS.map((icon) => (
                   <label key={icon} className="cursor-pointer">
                     <input type="radio" name="icon" value={icon} className="peer sr-only" defaultChecked={icon === "tag"} />
-                    <span className="block rounded-lg p-1 peer-checked:ring-2 peer-checked:ring-brand">
+                    <span className="block rounded-xl p-1 peer-checked:ring-2 peer-checked:ring-brand">
                       <CategoryIcon icon={icon} />
                     </span>
                   </label>
@@ -64,12 +64,12 @@ export default async function CategoriasPage() {
         </Card>
 
         <Card className="!p-0 overflow-hidden">
-          <div className="p-4 sm:p-5">
+          <div className="p-5 sm:p-6">
             <h2 className="text-base font-semibold text-slate-100">Categorias cadastradas</h2>
           </div>
           <ul className="divide-y divide-base-border/60">
             {categories.map((c) => (
-              <li key={c.id} className="flex items-center justify-between gap-3 px-5 py-3">
+              <li key={c.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                 <span className="flex items-center gap-3">
                   <CategoryIcon icon={c.icon} color={c.color} />
                   <span className={c.active ? "text-slate-100" : "text-slate-500 line-through"}>{c.name}</span>

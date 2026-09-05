@@ -43,15 +43,15 @@ export default async function ParcelamentosPage({
         month={month}
       />
 
-      <div className="mb-4 flex items-center gap-3 rounded-xl border border-warn/30 bg-warn/10 px-4 py-3 text-sm text-warn lg:mb-6">
+      <div className="mb-6 flex items-center gap-3 rounded-2xl border border-warn/30 bg-warn/10 px-5 py-3.5 text-sm text-warn lg:mb-8">
         <AlertTriangle size={18} className="shrink-0" />
         Evite novas compras parceladas enquanto durar o período de reorganização financeira.
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <SectionTitle>+ Nova compra parcelada</SectionTitle>
-          <form action={createInstallment} className="space-y-3">
+          <form action={createInstallment} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="description">Descrição</label>
               <input className="field-input" id="description" name="description" placeholder="Ex: Loja X" required />
@@ -124,7 +124,7 @@ export default async function ParcelamentosPage({
 
         <div className="space-y-4">
           <Card className="!p-0 overflow-hidden">
-            <div className="flex items-center justify-between p-4 sm:p-5">
+            <div className="flex items-center justify-between p-5 sm:p-6">
               <h2 className="text-base font-semibold text-slate-100">Ativos em {monthLabel(year, month)}</h2>
               <span className="text-sm font-medium text-slate-300">{centsToBRL(totalPessoal)}</span>
             </div>
@@ -132,11 +132,11 @@ export default async function ParcelamentosPage({
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-y border-base-border text-left text-xs uppercase tracking-wide text-slate-500">
-                    <th className="px-5 py-2 font-medium">Descrição</th>
-                    <th className="px-5 py-2 font-medium">Parcela</th>
-                    <th className="px-5 py-2 font-medium">Situação</th>
-                    <th className="px-5 py-2 text-right font-medium">Sua parte</th>
-                    <th className="px-5 py-2" />
+                    <th className="px-5 py-2.5 font-medium">Descrição</th>
+                    <th className="px-5 py-2.5 font-medium">Parcela</th>
+                    <th className="px-5 py-2.5 font-medium">Situação</th>
+                    <th className="px-5 py-2.5 text-right font-medium">Sua parte</th>
+                    <th className="px-5 py-2.5" />
                   </tr>
                 </thead>
                 <tbody>
@@ -149,14 +149,14 @@ export default async function ParcelamentosPage({
                   )}
                   {ativos.map(({ inst, state }) => (
                     <tr key={inst.id} className="border-b border-base-border/60 last:border-0">
-                      <td className="px-5 py-3 text-slate-100">
+                      <td className="px-5 py-3.5 text-slate-100">
                         {inst.description}
                         {inst.personName && <span className="ml-2 text-xs text-slate-500">({inst.personName})</span>}
                       </td>
-                      <td className="px-5 py-3 text-slate-300">
+                      <td className="px-5 py-3.5 text-slate-300">
                         {state!.currentInstallment}/{state!.totalInstallments}
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3.5">
                         <span
                           className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
                             state!.status === "ultima" ? "bg-warn/15 text-warn" : "bg-brand-soft/40 text-brand-light"
@@ -165,7 +165,7 @@ export default async function ParcelamentosPage({
                           {state!.status === "ultima" ? "Última" : "Ativo"}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-slate-100">
+                      <td className="px-5 py-3.5 text-right font-medium text-slate-100">
                         {centsToBRL(state!.personalValueCents)}
                         {inst.personalPercentage < 1 && (
                           <span className="ml-1 text-xs font-normal text-slate-500">

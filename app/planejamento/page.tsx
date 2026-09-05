@@ -38,10 +38,10 @@ export default async function PlanejamentoPage({
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-2" id="planejamento">
+      <div className="grid gap-6 lg:grid-cols-2" id="planejamento">
         <Card>
           <SectionTitle>Configuração da competência</SectionTitle>
-          <form action={updateMonthSettings} className="space-y-3">
+          <form action={updateMonthSettings} className="space-y-4">
             <input type="hidden" name="monthId" value={data.month.id} />
             <input type="hidden" name="year" value={year} />
             <input type="hidden" name="month" value={month} />
@@ -93,7 +93,7 @@ export default async function PlanejamentoPage({
         </Card>
       </div>
 
-      <Card className="mt-4 lg:mt-6">
+      <Card className="mt-6 lg:mt-8">
         <SectionTitle>Compromissos previstos (obrigatórios)</SectionTitle>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-sm">
@@ -135,7 +135,7 @@ export default async function PlanejamentoPage({
         </div>
       </Card>
 
-      <Card className="mt-4 lg:mt-6">
+      <Card className="mt-6 lg:mt-8">
         <SectionTitle>Tetos por categoria</SectionTitle>
         <div className="space-y-4">
           {data.categories.map((c) => (

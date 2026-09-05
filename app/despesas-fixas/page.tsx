@@ -33,10 +33,10 @@ export default async function DespesasFixasPage({
         month={month}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <SectionTitle>+ Nova despesa fixa</SectionTitle>
-          <form action={createFixedExpense} className="space-y-3">
+          <form action={createFixedExpense} className="space-y-4">
             <div>
               <label className="field-label" htmlFor="name">Nome</label>
               <input className="field-input" id="name" name="name" placeholder="Ex: Aluguel" required />
@@ -100,18 +100,18 @@ export default async function DespesasFixasPage({
         </Card>
 
         <Card className="!p-0 overflow-hidden">
-          <div className="p-4 sm:p-5">
+          <div className="p-5 sm:p-6">
             <h2 className="text-base font-semibold text-slate-100">Despesas cadastradas</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-y border-base-border text-left text-xs uppercase tracking-wide text-slate-500">
-                  <th className="px-5 py-2 font-medium">Nome</th>
-                  <th className="px-5 py-2 font-medium">Recorrência</th>
-                  <th className="px-5 py-2 font-medium">Situação em {monthLabel(year, month)}</th>
-                  <th className="px-5 py-2 text-right font-medium">Sua parte</th>
-                  <th className="px-5 py-2" />
+                  <th className="px-5 py-2.5 font-medium">Nome</th>
+                  <th className="px-5 py-2.5 font-medium">Recorrência</th>
+                  <th className="px-5 py-2.5 font-medium">Situação em {monthLabel(year, month)}</th>
+                  <th className="px-5 py-2.5 text-right font-medium">Sua parte</th>
+                  <th className="px-5 py-2.5" />
                 </tr>
               </thead>
               <tbody>
@@ -126,7 +126,7 @@ export default async function DespesasFixasPage({
                   const state = getFixedExpenseStateForMonth(fx, year, month);
                   return (
                     <tr key={fx.id} className="border-b border-base-border/60 last:border-0">
-                      <td className="px-5 py-3 text-slate-100">
+                      <td className="px-5 py-3.5 text-slate-100">
                         {fx.name}
                         {fx.personName && <span className="ml-2 text-xs text-slate-500">({fx.personName})</span>}
                         {!fx.mandatory && (
@@ -135,11 +135,11 @@ export default async function DespesasFixasPage({
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3 text-slate-400">
+                      <td className="px-5 py-3.5 text-slate-400">
                         {fx.durationMonths ? `${fx.durationMonths} meses` : "Indefinida"} · desde{" "}
                         {monthLabel(fx.startYear, fx.startMonth)}
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3.5">
                         {state ? (
                           <span
                             className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
@@ -155,7 +155,7 @@ export default async function DespesasFixasPage({
                           </span>
                         )}
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-slate-100">
+                      <td className="px-5 py-3.5 text-right font-medium text-slate-100">
                         {state ? centsToBRL(state.personalValueCents) : "—"}
                       </td>
                       <td className="px-2 py-3 text-right">

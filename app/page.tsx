@@ -71,14 +71,14 @@ export default async function DashboardPage({
       {data.month.netIncomeCents == null && (
         <Link
           href={`/planejamento?y=${year}&m=${month}`}
-          className="mb-6 flex items-center gap-3 rounded-xl border border-warn/30 bg-warn/10 px-4 py-3 text-sm text-warn"
+          className="mb-6 flex items-center gap-3 rounded-2xl border border-warn/30 bg-warn/10 px-5 py-3.5 text-sm text-warn"
         >
           <AlertTriangle size={18} className="shrink-0" />
           Informe a renda líquida de {monthLabel(year, month)} para ver a sobra prevista e o saldo do mês.
         </Link>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
         <StatCard
           icon={ArrowUpRight}
           iconColor="#30d158"
@@ -110,7 +110,7 @@ export default async function DashboardPage({
         />
       </div>
 
-      <div className="mt-4 grid gap-4 lg:mt-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-2">
         <Card>
           <SectionTitle>Gastos por categoria</SectionTitle>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -149,7 +149,7 @@ export default async function DashboardPage({
         </Card>
       </div>
 
-      <div className="mt-4 grid gap-4 lg:mt-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-2">
         <Card>
           <SectionTitle
             action={
@@ -163,7 +163,7 @@ export default async function DashboardPage({
           {compromissos.length === 0 ? (
             <p className="text-sm text-slate-500">Nenhum compromisso obrigatório cadastrado.</p>
           ) : (
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {compromissos.map((c, idx) => (
                 <li key={idx} className="flex items-center justify-between gap-3 text-sm">
                   <span className="text-slate-300">{c.label}</span>
@@ -194,7 +194,7 @@ export default async function DashboardPage({
             Teto de gastos novos
           </SectionTitle>
           <ProgressBar percent={tetoUsedPercent} color="#0a84ff" />
-          <ul className="mt-4 space-y-3">
+          <ul className="mt-4 space-y-4">
             {data.categories.map((c) => (
               <li key={c.id} className="flex items-center gap-3">
                 <CategoryIcon icon={c.icon} color={c.color} size={15} />
@@ -214,7 +214,7 @@ export default async function DashboardPage({
       </div>
 
       {data.summary.sobraPrevista != null && (
-        <Card className="mt-4 flex items-center gap-3 lg:mt-6">
+        <Card className="mt-6 flex items-center gap-3 lg:mt-8">
           <PiggyBank size={20} className="shrink-0 text-brand-light" />
           <p className="text-sm text-slate-300">
             Sobra prevista de {monthLabel(year, month)}:{" "}
