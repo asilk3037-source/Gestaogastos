@@ -1,0 +1,151 @@
+// Sistema de Gestão Financeira Pessoal — modelo de dados
+// Baseado na especificação funcional v1.0 (seção 10 — Estrutura de dados sugerida)
+// Valores monetários são armazenados em centavos (Int), nunca float, conforme regra técnica (seção 11).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?  @unique
+  currency      String   @default("BRL")
+  createdAt     DateTime @default(now())
+
+  months         Month[]
+  categories     Category[]
+  paymentMethods PaymentMethod[]
+  installments   Installment[]
+  fixedExpenses  FixedExpense[]
+}
+
+// Uma competência (mês/ano). Criada sob demanda (virada de mês) — o sistema
+// não depende de meses pré-cadastrados; qualquer mês pode ser aberto.
+model Month {
+  id                 String    @id @default(cuid())
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+  year               Int
+  month              Int // 1-12
+  netIncomeCents     Int? // renda líquida — nula até ser informada pela usuária
+  reserveTargetCents Int       @default(0)
+  status             String    @default("open") // open | closed
+  closedAt           DateTime?
+  createdAt          DateTime  @default(now())
+
+  monthlyLimits MonthlyLimit[]
+  transactions  Transaction[]
+
+  @@unique([userId, year, month])
+}
+
+model Category {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  name              String
+  icon              String   @default("tag")
+  color             String   @default("#8b5cf6")
+  defaultLimitCents Int      @default(0)
+  active            Boolean  @default(true)
+  sortOrder         Int      @default(0)
+  createdAt         DateTime @default(now())
+
+  monthlyLimits MonthlyLimit[]
+  transactions  Transaction[]
+
+  @@unique([userId, name])
+}
+
+// Teto de uma categoria em uma competência específica — editável por mês,
+// sem afetar meses já fechados (regra técnica, seção 11).
+model MonthlyLimit {
+  id         String   @id @default(cuid())
+  monthId    String
+  month      Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  limitCents Int
+
+  @@unique([monthId, categoryId])
+}
+
+model PaymentMethod {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  type      String // credito | debito | pix | dinheiro | outro
+  cardLast4 String?
+  isPrimary Boolean  @default(false)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  transactions  Transaction[]
+  installments  Installment[]
+  fixedExpenses FixedExpense[]
+}
+
+model Transaction {
+  id              String         @id @default(cuid())
+  monthId         String
+  month           Month          @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  date            DateTime
+  description     String
+  categoryId      String
+  category        Category       @relation(fields: [categoryId], references: [id])
+  amountCents     Int
+  paymentMethodId String?
+  paymentMethod   PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  necessary       Boolean?
+  notes           String?
+  createdAt       DateTime       @default(now())
+}
+
+// Compra parcelada — entidade real (não apenas o total do mês). O sistema
+// calcula X/Y, projeta meses futuros e encerra automaticamente após Y/Y.
+model Installment {
+  id                     String         @id @default(cuid())
+  userId                 String
+  user                   User           @relation(fields: [userId], references: [id])
+  description            String
+  installmentAmountCents Int
+  totalInstallments      Int
+  firstYear              Int
+  firstMonth             Int
+  personalPercentage     Float          @default(1) // 0..1 — ex: Casas Bahia = 0.5
+  personName             String? // pessoa que compartilha a despesa (opcional, ex: "Isabel")
+  paymentMethodId        String?
+  paymentMethod          PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  active                 Boolean        @default(true)
+  createdAt              DateTime       @default(now())
+}
+
+// Despesa fixa recorrente (aluguel, empréstimo, assinaturas fixas...).
+// durationMonths define por quantas competências, a partir da inicial, a
+// despesa é cobrada (ex: empréstimo = 4). Deixe null para recorrência indefinida.
+model FixedExpense {
+  id                 String         @id @default(cuid())
+  userId             String
+  user               User           @relation(fields: [userId], references: [id])
+  name               String
+  amountCents        Int
+  startYear          Int
+  startMonth         Int
+  durationMonths     Int? // null = recorrência indefinida (até endYear/endMonth ou para sempre)
+  endYear            Int?
+  endMonth           Int?
+  personalPercentage Float          @default(1)
+  personName         String?
+  mandatory          Boolean        @default(true) // conta como "compromisso obrigatório"
+  paymentMethodId    String?
+  paymentMethod      PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
+  active             Boolean        @default(true)
+  createdAt          DateTime       @default(now())
+}
