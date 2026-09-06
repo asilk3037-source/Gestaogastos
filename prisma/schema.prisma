@@ -7,8 +7,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // DATABASE_URL: usada pelo Prisma Client em runtime — pooler em modo
+  // transação (porta 6543, pgbouncer=true), recomendado pela Supabase para
+  // ambientes serverless como a Vercel.
+  url       = env("DATABASE_URL")
+  // DIRECT_URL: usada só por `prisma migrate`/`db push` — pooler em modo
+  // sessão ou conexão direta (porta 5432), que suporta comandos DDL.
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
