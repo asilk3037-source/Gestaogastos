@@ -63,14 +63,26 @@ npm start
 ## Deploy (Vercel)
 
 O projeto está conectado à Vercel: todo push em `main` gera um deploy automático. Para
-funcionar, o projeto na Vercel precisa de uma variável de ambiente `DATABASE_URL` apontando
-para um Postgres real (Vercel Postgres/Neon, Supabase etc.) em **Project Settings → Environment
-Variables**. Depois de configurá-la (ou trocar de banco), rode uma vez, apontando para o banco
-de produção:
+funcionar, o projeto na Vercel precisa de duas variáveis de ambiente em **Project Settings →
+Environment Variables** (Production e Preview):
+
+- `DATABASE_URL` — usada pelo Prisma Client em runtime. Com Supabase, use o **pooler em modo
+  transação** (porta `6543`, com `pgbouncer=true&connection_limit=1`), recomendado para
+  ambientes serverless:
+  `postgresql://postgres.<ref>:<senha>@aws-0-<região>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1&schema=<schema>`
+- `DIRECT_URL` — usada só por `prisma migrate`/`db push`. Use o **pooler em modo sessão** ou a
+  conexão direta (porta `5432`, sem `pgbouncer`):
+  `postgresql://postgres.<ref>:<senha>@aws-0-<região>.pooler.supabase.com:5432/postgres?schema=<schema>`
+
+O parâmetro `?schema=<schema>` é opcional — só é necessário se o app dividir um projeto
+Postgres com outras aplicações e precisar ficar isolado num schema próprio (em vez do `public`).
+
+Depois de configurar (ou trocar de banco), rode uma vez para criar as tabelas e os dados
+iniciais, apontando para o banco de produção:
 
 ```bash
-DATABASE_URL="<connection string de produção>" npx prisma db push
-DATABASE_URL="<connection string de produção>" npx tsx prisma/seed.ts
+DATABASE_URL="<DIRECT_URL de produção>" npx prisma db push
+DATABASE_URL="<DIRECT_URL de produção>" npx tsx prisma/seed.ts
 ```
 
 ## Testes
