@@ -126,6 +126,13 @@ export default async function PlanejamentoPage({
                   </td>
                 </tr>
               )}
+              {data.adjustments.map((a) => (
+                <tr key={a.id} className="border-t border-base-border/60">
+                  <td className="py-2.5 text-slate-100">{a.description}</td>
+                  <td className="py-2.5 text-slate-500">ajuste pontual do mês</td>
+                  <td className="py-2.5 text-right font-medium text-slate-100">{centsToBRL(a.amountCents)}</td>
+                </tr>
+              ))}
               <tr className="border-t border-base-border font-semibold">
                 <td className="py-2.5 text-slate-200" colSpan={2}>Total comprometido</td>
                 <td className="py-2.5 text-right text-slate-100">{centsToBRL(data.summary.totalComprometido)}</td>

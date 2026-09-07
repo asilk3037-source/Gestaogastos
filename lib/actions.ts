@@ -4,10 +4,30 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { brlToCents } from "@/lib/format";
+import { computePersonSettlement } from "@/lib/finance";
 import { getCurrentUser, getOrCreateMonth } from "@/lib/queries";
 
 function monthPath(base: string, year: number, month: number) {
   return `${base}?y=${year}&m=${month}`;
+}
+
+/** Trilha de auditoria (spec seção 15) — importação, exclusão e
+ * fechamento/reabertura de competência. Nunca lança: um problema no log
+ * não pode derrubar a operação principal. */
+async function logAudit(
+  userId: string,
+  action: string,
+  entityType: string,
+  entityId?: string | null,
+  details?: string
+) {
+  try {
+    await prisma.auditLog.create({
+      data: { userId, action, entityType, entityId: entityId ?? null, details },
+    });
+  } catch {
+    // auditoria é best-effort — não deve impedir a operação principal.
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -53,19 +73,23 @@ export async function updateCategoryLimit(formData: FormData) {
 }
 
 export async function closeMonth(formData: FormData) {
+  const user = await getCurrentUser();
   const monthId = String(formData.get("monthId"));
   const year = Number(formData.get("year"));
   const month = Number(formData.get("month"));
   await prisma.month.update({ where: { id: monthId }, data: { status: "closed", closedAt: new Date() } });
+  await logAudit(user.id, "close_month", "Month", monthId, `${year}-${month}`);
   revalidatePath("/planejamento");
   redirect(monthPath("/planejamento", year, month));
 }
 
 export async function reopenMonth(formData: FormData) {
+  const user = await getCurrentUser();
   const monthId = String(formData.get("monthId"));
   const year = Number(formData.get("year"));
   const month = Number(formData.get("month"));
   await prisma.month.update({ where: { id: monthId }, data: { status: "open", closedAt: null } });
+  await logAudit(user.id, "reopen_month", "Month", monthId, `${year}-${month}`);
   revalidatePath("/planejamento");
   redirect(monthPath("/planejamento", year, month));
 }
@@ -111,10 +135,12 @@ export async function createTransaction(formData: FormData) {
 }
 
 export async function deleteTransaction(formData: FormData) {
+  const user = await getCurrentUser();
   const id = String(formData.get("id"));
   const year = Number(formData.get("year"));
   const month = Number(formData.get("month"));
   await prisma.transaction.delete({ where: { id } });
+  await logAudit(user.id, "delete", "Transaction", id);
   revalidatePath("/");
   revalidatePath("/lancamentos");
   redirect(monthPath("/lancamentos", year, month));
@@ -281,4 +307,164 @@ export async function updateProfile(formData: FormData) {
   revalidatePath("/perfil");
   revalidatePath("/");
   redirect("/perfil");
+}
+
+// ---------------------------------------------------------------------------
+// Caixa: saldo inicial, entradas de caixa e ajustes pontuais
+// (Pacote de atualização Setembro/2026)
+// ---------------------------------------------------------------------------
+
+export async function upsertOpeningBalance(formData: FormData) {
+  const user = await getCurrentUser();
+  const monthId = String(formData.get("monthId"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  const amountCents = brlToCents(String(formData.get("amount") ?? "0"));
+  const description = String(formData.get("description") ?? "").trim() || null;
+
+  await prisma.openingBalance.upsert({
+    where: { monthId },
+    update: { amountCents, description },
+    create: { userId: user.id, monthId, amountCents, description },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+export async function deleteOpeningBalance(formData: FormData) {
+  const id = String(formData.get("id"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  await prisma.openingBalance.delete({ where: { id } });
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+const CASH_ENTRY_TYPES = ["salary", "reimbursement", "loan_proceeds", "transfer", "other"] as const;
+
+export async function createCashEntry(formData: FormData) {
+  const user = await getCurrentUser();
+  const monthId = String(formData.get("monthId"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  const type = String(formData.get("type") ?? "other");
+  const amountCents = brlToCents(String(formData.get("amount") ?? "0"));
+  const description = String(formData.get("description") ?? "").trim() || null;
+  // Por padrão nenhuma entrada de caixa conta como renda — quem decide o
+  // contrário é a usuária, marcando a caixa explicitamente (ex.: salário).
+  const countsAsIncome = formData.get("countsAsIncome") === "on";
+
+  if (amountCents <= 0 || !CASH_ENTRY_TYPES.includes(type as (typeof CASH_ENTRY_TYPES)[number])) {
+    throw new Error("Tipo e valor (maior que zero) são obrigatórios.");
+  }
+
+  await prisma.cashEntry.create({
+    data: { userId: user.id, monthId, type, amountCents, countsAsIncome, description },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+export async function deleteCashEntry(formData: FormData) {
+  const user = await getCurrentUser();
+  const id = String(formData.get("id"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  await prisma.cashEntry.delete({ where: { id } });
+  await logAudit(user.id, "delete", "CashEntry", id);
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+export async function createAdjustment(formData: FormData) {
+  const user = await getCurrentUser();
+  const monthId = String(formData.get("monthId"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  const description = String(formData.get("description") ?? "").trim();
+  const amountCents = brlToCents(String(formData.get("amount") ?? "0"));
+
+  if (!description || amountCents <= 0) {
+    throw new Error("Descrição e valor (maior que zero) são obrigatórios.");
+  }
+
+  await prisma.adjustment.create({
+    data: { userId: user.id, monthId, description, amountCents },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+export async function deleteAdjustment(formData: FormData) {
+  const user = await getCurrentUser();
+  const id = String(formData.get("id"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  await prisma.adjustment.delete({ where: { id } });
+  await logAudit(user.id, "delete", "Adjustment", id);
+  revalidatePath("/");
+  revalidatePath("/caixa");
+  redirect(monthPath("/caixa", year, month));
+}
+
+// ---------------------------------------------------------------------------
+// Acertos entre pessoas (ex.: reembolsos de despesas compartilhadas)
+// ---------------------------------------------------------------------------
+
+export async function createPersonBalance(formData: FormData) {
+  const user = await getCurrentUser();
+  const monthId = String(formData.get("monthId"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  const person = String(formData.get("person") ?? "").trim();
+  const payableCents = brlToCents(String(formData.get("payable") ?? "0"));
+  const receivableCents = brlToCents(String(formData.get("receivable") ?? "0"));
+  const description = String(formData.get("description") ?? "").trim() || null;
+
+  if (!person) throw new Error("Nome da pessoa é obrigatório.");
+
+  // payable/receivable aqui já chegam prontos em reais (ex.: 707,95 e
+  // 689,85) — quando a origem tiver componentes percentuais fracionados
+  // (meio-centavo), use computePersonSettlement (lib/finance.ts) antes de
+  // preencher o formulário, como faz o import de Setembro/2026.
+  const { netCents } = computePersonSettlement({
+    payableItemsCents: [payableCents],
+    receivableItems: [{ amountCents: receivableCents, percentage: 1 }],
+  });
+
+  await prisma.personBalance.create({
+    data: { userId: user.id, monthId, person, payableCents, receivableCents, netCents, description },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/acertos");
+  redirect(monthPath("/acertos", year, month));
+}
+
+export async function markPersonBalancePaid(formData: FormData) {
+  const id = String(formData.get("id"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  await prisma.personBalance.update({ where: { id }, data: { status: "pago", settledAt: new Date() } });
+  revalidatePath("/acertos");
+  redirect(monthPath("/acertos", year, month));
+}
+
+export async function deletePersonBalance(formData: FormData) {
+  const user = await getCurrentUser();
+  const id = String(formData.get("id"));
+  const year = Number(formData.get("year"));
+  const month = Number(formData.get("month"));
+  await prisma.personBalance.delete({ where: { id } });
+  await logAudit(user.id, "delete", "PersonBalance", id);
+  revalidatePath("/acertos");
+  redirect(monthPath("/acertos", year, month));
 }

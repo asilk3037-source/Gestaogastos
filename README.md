@@ -151,6 +151,11 @@ Modelo relacional (Postgres via Prisma) — nomes conforme sugerido na seção 1
 | `Transaction` | Lançamento variável (data, categoria, valor, forma de pagamento, necessário?, observação) |
 | `Installment` | Compra parcelada — descrição, valor da parcela, nº total, competência inicial, **percentual pessoal** (para despesas compartilhadas, ex. Casas Bahia = 50%) |
 | `FixedExpense` | Despesa fixa/recorrente (aluguel, empréstimo...), com duração opcional em meses e percentual pessoal |
+| `CashEntry` | Entrada de caixa que não é necessariamente renda (salário, reembolso, empréstimo recebido...) — tela **Caixa** |
+| `OpeningBalance` | Saldo inicial de uma competência de implantação — nunca é receita — tela **Caixa** |
+| `Adjustment` | Despesa pontual de uma única competência (nunca vira recorrência) — tela **Caixa** |
+| `PersonBalance` | Acerto de despesas compartilhadas com outra pessoa (ex. Isabel) — tela **Acertos** |
+| `ImportRecord` / `AuditLog` | Idempotência de importações e trilha de auditoria (ver `docs/pacote-setembro-2026.md`) |
 
 **Nenhum valor de teto, cartão ou percentual de divisão está hardcoded na interface** — os
 valores iniciais (R$150 Transporte, cartão 0283, Casas Bahia 50% etc.) são **dados no banco**,

@@ -12,7 +12,8 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts"
+    "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
+    "db:import-set2026": "tsx prisma/import-setembro-2026.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
