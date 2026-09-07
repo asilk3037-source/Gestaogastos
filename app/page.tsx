@@ -242,6 +242,13 @@ export default async function DashboardPage({
           >
             Teto de gastos novos
           </SectionTitle>
+          {data.month.skipCeilingTracking && (
+            <p className="mb-3 text-xs text-slate-500">
+              Competência de implantação — estes lançamentos são o extrato retroativo de um mês
+              anterior, não gasto novo sob orçamento, então o teto não é avaliado aqui (sem alertas
+              de "atenção"/"excedido").
+            </p>
+          )}
           <ProgressBar percent={tetoUsedPercent} color="#0a84ff" />
           <ul className="mt-4 space-y-4">
             {data.categories.map((c) => (
@@ -254,7 +261,10 @@ export default async function DashboardPage({
                       {centsToBRL(c.spentCents)} / {centsToBRL(c.limitCents)}
                     </span>
                   </div>
-                  <ProgressBar percent={c.percentUsed} color={alertColor(c.alertLevel)} />
+                  <ProgressBar
+                    percent={c.percentUsed}
+                    color={data.month.skipCeilingTracking ? undefined : alertColor(c.alertLevel)}
+                  />
                 </div>
               </li>
             ))}

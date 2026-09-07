@@ -15,6 +15,8 @@ ajustes pontuais e acerto com Isabel).
 | Importação idempotente (CA-S07) | Model `ImportRecord` (`importId` único) + `lib/finance.ts#shouldApplyImport` |
 | Trilha de auditoria | Model `AuditLog`, gravado em import, exclusões e fechar/reabrir mês |
 | Arredondar só na exibição (UT-011) | `sumSharedAmountsCents`/`computePersonSettlement` somam em décimos de centavo e arredondam uma única vez no final |
+| Teto de gastos não avaliado numa competência de implantação | Campo `Month.skipCeilingTracking` — Dashboard e Planejamento não aplicam cor de alerta (atenção/atingido/excedido) nas barras de progresso quando ativo |
+| Aluguel integral (não os 50% da despesa fixa recorrente) numa competência de implantação | `Adjustment` pontual — a divisão com a Isabel continua sendo cobrada via **Acertos**, não pela despesa fixa `Aluguel` (que só passa a valer a partir de outubro/2026, já dividida 50/50) |
 
 ## Como rodar a importação
 
@@ -30,6 +32,26 @@ Aplica, uma única vez (idempotente via `ImportRecord.importId = "setembro-2026-
 - Acerto Isabel (líquido): R$ 18,11 a pagar (bruto: R$ 707,95 a pagar, R$ 689,845 a receber — não arredondado)
 
 Reexecutar o comando não duplica nada — ele confirma que o import já foi aplicado e sai.
+
+## Conciliação manual do extrato 0283 (dados, não código)
+
+Depois do import acima, o extrato completo do cartão 0283 de Setembro/2026 (66
+linhas da planilha original) foi conciliado manualmente contra produção via SQL
+(`ImportRecord.importId = "setembro-2026-extrato-0283-v1"`):
+
+- 55 compras variáveis avulsas (R$ 2.030,70) que só existiam na planilha, categorizadas
+  e lançadas como `Transaction`.
+- 2 parcelamentos que faltavam por completo ("Supermercados Bh" 2x, "Cobasi Bh Castelo"
+  3x, ambos 50% Isabel), como `Installment`.
+
+E, como essa competência reflete um extrato retroativo (não gasto novo sob orçamento),
+mais dois ajustes manuais (`ImportRecord.importId = "setembro-2026-aluguel-integral-v1"`):
+
+- `Month.skipCeilingTracking = true` — o teto por categoria deixa de mostrar alertas
+  de "atenção"/"excedido" nesta competência.
+- Aluguel de Setembro lançado como `Adjustment` pelo valor **integral** (R$ 700,00),
+  não os R$ 350,00 (50%) que a despesa fixa `Aluguel` cobraria a partir de outubro/2026
+  — a metade da Isabel já está embutida no acerto de R$ 18,11 (`PersonBalance`).
 
 ## O que ficou fora do escopo (por decisão do próprio pacote)
 

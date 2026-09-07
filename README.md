@@ -144,7 +144,7 @@ Modelo relacional (Postgres via Prisma) — nomes conforme sugerido na seção 1
 | Entidade | Papel |
 |---|---|
 | `User` | Usuária do sistema (mono-usuário nesta versão) |
-| `Month` | Uma competência (ano+mês). Criada sob demanda; guarda renda líquida, meta de reserva e status (aberto/fechado) |
+| `Month` | Uma competência (ano+mês). Criada sob demanda; guarda renda líquida, meta de reserva, status (aberto/fechado) e `skipCeilingTracking` (suprime alertas de teto numa competência de implantação, ex. Setembro/2026 — ver `docs/pacote-setembro-2026.md`) |
 | `Category` | Categoria de gasto variável, com teto padrão |
 | `MonthlyLimit` | Teto de uma categoria **numa competência específica** — editar o teto de um mês nunca afeta outro |
 | `PaymentMethod` | Cartões, Pix, débito, dinheiro... O cartão inicial (0283) é apenas o primeiro cadastro, não uma regra fixa no código |
