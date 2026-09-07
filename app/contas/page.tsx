@@ -24,7 +24,7 @@ export default async function ContasPage() {
     <AppShell>
       <PageHeader title="Contas e formas de pagamento" subtitle="O cartão inicial ativo no planejamento é o 0283 — outros meios não entram automaticamente." />
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova forma de pagamento</h2>
           <form action={createPaymentMethod} className="space-y-4">

@@ -28,7 +28,7 @@ export default async function LancamentosPage({
         month={month}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr]">
         <Card id="novo-lancamento">
           <SectionTitle>+ Novo gasto</SectionTitle>
           <form action={createTransaction} className="space-y-4">

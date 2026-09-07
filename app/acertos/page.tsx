@@ -38,7 +38,7 @@ export default async function AcertosPage({
         value={centsToSignedBRL(totalPendenteCents)}
       />
 
-      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[380px_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-[380px_1fr]">
         <Card>
           <SectionTitle>+ Novo acerto</SectionTitle>
           <p className="mb-4 -mt-2 text-xs text-slate-500">

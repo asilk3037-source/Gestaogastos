@@ -33,7 +33,7 @@ export default async function DespesasFixasPage({
         month={month}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <SectionTitle>+ Nova despesa fixa</SectionTitle>
           <form action={createFixedExpense} className="space-y-4">

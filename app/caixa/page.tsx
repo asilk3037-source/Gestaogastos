@@ -59,7 +59,7 @@ export default async function CaixaPage({
 
       <Card className="mt-6 lg:mt-8">
         <SectionTitle>Saldo inicial da competência</SectionTitle>
-        <form action={upsertOpeningBalance} className="grid gap-4 sm:grid-cols-[1fr_2fr_auto] sm:items-end">
+        <form action={upsertOpeningBalance} className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_2fr_auto] sm:items-end">
           <input type="hidden" name="monthId" value={data.month.id} />
           <input type="hidden" name="year" value={year} />
           <input type="hidden" name="month" value={month} />
@@ -88,7 +88,7 @@ export default async function CaixaPage({
         </form>
       </Card>
 
-      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[360px_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-[360px_1fr]">
         <Card>
           <SectionTitle>+ Nova entrada de caixa</SectionTitle>
           <form action={createCashEntry} className="space-y-4">
@@ -165,7 +165,7 @@ export default async function CaixaPage({
         </Card>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-[360px_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-[360px_1fr]">
         <Card>
           <SectionTitle>+ Ajuste pontual do mês</SectionTitle>
           <p className="mb-4 -mt-2 text-xs text-slate-500">
