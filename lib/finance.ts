@@ -184,6 +184,9 @@ export interface MonthSummaryInput {
   fixedExpensesMandatoryPersonalTotalCents: number;
   categoryLimitTotalCents: number;
   categorySpentTotalCents: number;
+  /** Ajustes pontuais da competência (ex.: "Empréstimo Amanda", "Viagem") —
+   * contam como compromisso/gasto SÓ deste mês, nunca recorrentes. */
+  adjustmentsTotalCents?: number;
 }
 
 export interface MonthSummary {
@@ -198,8 +201,11 @@ export interface MonthSummary {
 }
 
 export function computeMonthSummary(input: MonthSummaryInput): MonthSummary {
+  const adjustmentsTotalCents = input.adjustmentsTotalCents ?? 0;
   const totalComprometido =
-    input.installmentsPersonalTotalCents + input.fixedExpensesMandatoryPersonalTotalCents;
+    input.installmentsPersonalTotalCents +
+    input.fixedExpensesMandatoryPersonalTotalCents +
+    adjustmentsTotalCents;
   const tetoTotal = input.categoryLimitTotalCents;
   const planejadoTotal = totalComprometido + tetoTotal + input.reserveTargetCents;
   const gastoRealTotal = input.categorySpentTotalCents;
@@ -271,6 +277,97 @@ export function buildDefaultLimitsForNewMonth(
     categoryId: c.id,
     limitCents: previousLimits?.get(c.id) ?? c.defaultLimitCents,
   }));
+}
+
+// ---------------------------------------------------------------------------
+// Fluxo de caixa (Pacote Setembro/2026) — saldo inicial e entradas que não
+// são necessariamente renda (ex.: empréstimo recebido). Nunca entram nas
+// fórmulas de renda/sobra de computeMonthSummary; são só informativas.
+// ---------------------------------------------------------------------------
+
+export interface CashFlowInput {
+  openingBalanceCents: number;
+  cashEntriesTotalCents: number;
+}
+
+export function computeCashAvailable(input: CashFlowInput): number {
+  return input.openingBalanceCents + input.cashEntriesTotalCents;
+}
+
+// ---------------------------------------------------------------------------
+// Ajustes pontuais de implantação — despesas de uma única competência que
+// não devem virar recorrência (ex.: "Empréstimo Amanda", "Viagem").
+// ---------------------------------------------------------------------------
+
+export interface AdjustmentInput {
+  amountCents: number;
+}
+
+export function sumAdjustments(items: AdjustmentInput[]): number {
+  return items.reduce((sum, a) => sum + a.amountCents, 0);
+}
+
+// ---------------------------------------------------------------------------
+// Acertos entre pessoas (ex.: reembolsos de despesas compartilhadas) —
+// seção 4 do pacote de Setembro/2026.
+// ---------------------------------------------------------------------------
+
+export interface SharedAmountInput {
+  amountCents: number;
+  /** 0..1 — parte da OUTRA pessoa numa despesa paga por você. */
+  percentage: number;
+}
+
+/**
+ * Soma valores compartilhados sem arredondar cada parcela individualmente
+ * antes de somar — arredondar cada linha primeiro (ex.: R$105,17 × 50% →
+ * R$52,59) e só depois somar produz um total diferente (e menos exato) do
+ * que somar em precisão total e arredondar uma única vez no final. Regra
+ * "arredondar apenas na exibição/fechamento definido" (pacote Setembro/2026,
+ * UT-011). Trabalha internamente em décimos de centavo para evitar ponto
+ * flutuante no meio do caminho.
+ */
+export function sumSharedAmountsCents(items: SharedAmountInput[]): number {
+  const tenthsOfCent = items.reduce((sum, i) => sum + Math.round(i.amountCents * i.percentage * 10), 0);
+  return Math.round(tenthsOfCent / 10);
+}
+
+export interface PersonSettlementInput {
+  /** Valores (já em centavos inteiros) que a usuária deve à pessoa. */
+  payableItemsCents: number[];
+  /** Despesas pagas pela usuária cuja parte cabe à pessoa (ex.: 50% do aluguel). */
+  receivableItems: SharedAmountInput[];
+}
+
+export interface PersonSettlementResult {
+  payableCents: number;
+  /** Arredondado — só para exibição do subtotal, não usado no cálculo do net. */
+  receivableCents: number;
+  /** payable − receivable, calculado em precisão total antes de arredondar
+   * (não é payableCents − receivableCents, que já perderam precisão).
+   * Positivo = a usuária deve pagar; negativo = tem a receber. */
+  netCents: number;
+}
+
+export function computePersonSettlement(input: PersonSettlementInput): PersonSettlementResult {
+  const payableCents = input.payableItemsCents.reduce((s, v) => s + v, 0);
+  const receivableTenths = input.receivableItems.reduce(
+    (sum, i) => sum + Math.round(i.amountCents * i.percentage * 10),
+    0
+  );
+  const receivableCents = Math.round(receivableTenths / 10);
+  const netTenths = payableCents * 10 - receivableTenths;
+  const netCents = Math.round(netTenths / 10);
+  return { payableCents, receivableCents, netCents };
+}
+
+// ---------------------------------------------------------------------------
+// Importação idempotente (pacotes de conciliação/planilha) — reexecutar o
+// mesmo importId não deve duplicar registros (CA-S07 / UT-012).
+// ---------------------------------------------------------------------------
+
+export function shouldApplyImport(alreadyAppliedIds: string[], importId: string): boolean {
+  return !alreadyAppliedIds.includes(importId);
 }
 
 export function alertMessage(level: AlertLevel, categoryName: string): string | null {

@@ -2,9 +2,11 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   CreditCard,
+  HandCoins,
   LayoutDashboard,
   LayoutGrid,
   ListChecks,
+  PiggyBank,
   Receipt,
   Repeat,
   Target,
@@ -26,6 +28,8 @@ export const mainNav: NavItem[] = [
   { href: "/planejamento", label: "Planejamento", icon: ListChecks, color: "#ff9f0a" },
   { href: "/parcelamentos", label: "Parcelamentos", icon: Repeat, color: "#bf5af2" },
   { href: "/despesas-fixas", label: "Despesas Fixas", icon: Wallet, color: "#ff375f" },
+  { href: "/caixa", label: "Caixa", icon: PiggyBank, color: "#30d158" },
+  { href: "/acertos", label: "Acertos", icon: HandCoins, color: "#ff9f0a" },
   { href: "/metas", label: "Metas", icon: Target, color: "#5e5cd6" },
   { href: "/relatorios", label: "Relatórios", icon: BarChart3, color: "#32ade6" },
 ];

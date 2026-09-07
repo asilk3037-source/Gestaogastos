@@ -1,11 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import {
+  computeCashAvailable,
   computeCategoryStatus,
   computeMonthSummary,
   getFixedExpenseStateForMonth,
   getInstallmentStateForMonth,
   previousMonth,
+  sumAdjustments,
   sumTransactionsForCategory,
 } from "@/lib/finance";
 
@@ -82,6 +84,11 @@ export interface MonthDashboard {
   transactions: Prisma.TransactionGetPayload<{ include: { category: true; paymentMethod: true } }>[];
   paymentMethods: Awaited<ReturnType<typeof prisma.paymentMethod.findMany>>;
   summary: ReturnType<typeof computeMonthSummary>;
+  cashEntries: Awaited<ReturnType<typeof prisma.cashEntry.findMany>>;
+  openingBalance: Awaited<ReturnType<typeof prisma.openingBalance.findUnique>>;
+  cashAvailableCents: number;
+  adjustments: Awaited<ReturnType<typeof prisma.adjustment.findMany>>;
+  personBalances: Awaited<ReturnType<typeof prisma.personBalance.findMany>>;
 }
 
 export async function getMonthDashboard(
@@ -91,18 +98,31 @@ export async function getMonthDashboard(
 ): Promise<MonthDashboard> {
   const monthRow = await getOrCreateMonth(userId, year, month);
 
-  const [categoriesRaw, installmentsRaw, fixedExpensesRaw, transactions, paymentMethods] =
-    await Promise.all([
-      prisma.category.findMany({ where: { userId, active: true }, orderBy: { sortOrder: "asc" } }),
-      prisma.installment.findMany({ where: { userId, active: true }, include: { paymentMethod: true } }),
-      prisma.fixedExpense.findMany({ where: { userId, active: true } }),
-      prisma.transaction.findMany({
-        where: { monthId: monthRow.id },
-        include: { category: true, paymentMethod: true },
-        orderBy: { date: "desc" },
-      }),
-      prisma.paymentMethod.findMany({ where: { userId, active: true } }),
-    ]);
+  const [
+    categoriesRaw,
+    installmentsRaw,
+    fixedExpensesRaw,
+    transactions,
+    paymentMethods,
+    cashEntries,
+    openingBalance,
+    adjustments,
+    personBalances,
+  ] = await Promise.all([
+    prisma.category.findMany({ where: { userId, active: true }, orderBy: { sortOrder: "asc" } }),
+    prisma.installment.findMany({ where: { userId, active: true }, include: { paymentMethod: true } }),
+    prisma.fixedExpense.findMany({ where: { userId, active: true } }),
+    prisma.transaction.findMany({
+      where: { monthId: monthRow.id },
+      include: { category: true, paymentMethod: true },
+      orderBy: { date: "desc" },
+    }),
+    prisma.paymentMethod.findMany({ where: { userId, active: true } }),
+    prisma.cashEntry.findMany({ where: { monthId: monthRow.id }, orderBy: { date: "desc" } }),
+    prisma.openingBalance.findUnique({ where: { monthId: monthRow.id } }),
+    prisma.adjustment.findMany({ where: { monthId: monthRow.id }, orderBy: { createdAt: "desc" } }),
+    prisma.personBalance.findMany({ where: { monthId: monthRow.id }, orderBy: { createdAt: "desc" } }),
+  ]);
 
   const installmentStates = installmentsRaw
     .map((inst) => {
@@ -149,6 +169,7 @@ export async function getMonthDashboard(
     .reduce((sum, s) => sum + s.personalValueCents, 0);
   const categoryLimitTotalCents = categories.reduce((sum, c) => sum + c.limitCents, 0);
   const categorySpentTotalCents = categories.reduce((sum, c) => sum + c.spentCents, 0);
+  const adjustmentsTotalCents = sumAdjustments(adjustments);
 
   const summary = computeMonthSummary({
     netIncomeCents: monthRow.netIncomeCents,
@@ -157,6 +178,12 @@ export async function getMonthDashboard(
     fixedExpensesMandatoryPersonalTotalCents,
     categoryLimitTotalCents,
     categorySpentTotalCents,
+    adjustmentsTotalCents,
+  });
+
+  const cashAvailableCents = computeCashAvailable({
+    openingBalanceCents: openingBalance?.amountCents ?? 0,
+    cashEntriesTotalCents: cashEntries.reduce((sum, c) => sum + c.amountCents, 0),
   });
 
   return {
@@ -167,6 +194,11 @@ export async function getMonthDashboard(
     transactions,
     paymentMethods,
     summary,
+    cashEntries,
+    openingBalance,
+    cashAvailableCents,
+    adjustments,
+    personBalances,
   };
 }
 

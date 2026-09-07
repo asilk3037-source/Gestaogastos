@@ -18,17 +18,23 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String
-  email         String?  @unique
-  currency      String   @default("BRL")
-  createdAt     DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  email     String?  @unique
+  currency  String   @default("BRL")
+  createdAt DateTime @default(now())
 
-  months         Month[]
-  categories     Category[]
-  paymentMethods PaymentMethod[]
-  installments   Installment[]
-  fixedExpenses  FixedExpense[]
+  months          Month[]
+  categories      Category[]
+  paymentMethods  PaymentMethod[]
+  installments    Installment[]
+  fixedExpenses   FixedExpense[]
+  cashEntries     CashEntry[]
+  openingBalances OpeningBalance[]
+  adjustments     Adjustment[]
+  personBalances  PersonBalance[]
+  importRecords   ImportRecord[]
+  auditLogs       AuditLog[]
 }
 
 // Uma competência (mês/ano). Criada sob demanda (virada de mês) — o sistema
@@ -45,8 +51,12 @@ model Month {
   closedAt           DateTime?
   createdAt          DateTime  @default(now())
 
-  monthlyLimits MonthlyLimit[]
-  transactions  Transaction[]
+  monthlyLimits  MonthlyLimit[]
+  transactions   Transaction[]
+  cashEntries    CashEntry[]
+  openingBalance OpeningBalance?
+  adjustments    Adjustment[]
+  personBalances PersonBalance[]
 
   @@unique([userId, year, month])
 }
@@ -154,4 +164,103 @@ model FixedExpense {
   paymentMethod      PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
   active             Boolean        @default(true)
   createdAt          DateTime       @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Pacote de atualização Setembro/2026 — fluxo de caixa, acertos entre
+// pessoas e infraestrutura de importação/auditoria (ver
+// docs/pacote-setembro-2026.md e prisma/import-setembro-2026.ts).
+// ---------------------------------------------------------------------------
+
+// Entrada de caixa que não é necessariamente renda (salário, reembolso,
+// empréstimo recebido, transferência...). `countsAsIncome` decide se ela
+// entra nas fórmulas de renda/sobra (lib/finance.ts) — por padrão não conta,
+// pois o caso de uso principal (ex.: empréstimo recebido) é caixa, não renda.
+model CashEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  monthId        String
+  month          Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  type           String // salary | reimbursement | loan_proceeds | transfer | other
+  amountCents    Int
+  countsAsIncome Boolean  @default(false)
+  description    String?
+  date           DateTime @default(now())
+  createdAt      DateTime @default(now())
+}
+
+// Saldo de caixa disponível no início de uma competência de implantação —
+// nunca tratado como receita (spec CA-S02).
+model OpeningBalance {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  monthId     String   @unique
+  month       Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  amountCents Int
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+// Despesa pontual de uma única competência (ex.: "Empréstimo Amanda",
+// "Viagem") — nunca vira recorrência automaticamente; some conforme conta
+// gastoTotalMes/totalComprometido daquele mês específico, sem afetar os
+// seguintes.
+model Adjustment {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  monthId     String
+  month       Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  description String
+  amountCents Int
+  createdAt   DateTime @default(now())
+}
+
+// Acerto de despesas compartilhadas com outra pessoa (ex.: Isabel) numa
+// competência. payable = a usuária deve à pessoa; receivable = a parte da
+// pessoa em despesas pagas pela usuária; net = payable - receivable,
+// calculado com precisão total antes de arredondar (regra UT-011 do
+// pacote), nunca a partir dos dois subtotais já arredondados.
+model PersonBalance {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  monthId         String
+  month           Month     @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  person          String
+  payableCents    Int
+  receivableCents Int
+  netCents        Int // positivo = usuária deve pagar; negativo = tem a receber
+  description     String?
+  status          String    @default("pendente") // pendente | pago
+  settledAt       DateTime?
+  createdAt       DateTime  @default(now())
+}
+
+// Controle de idempotência de importações (pacotes de conciliação/planilha)
+// — reexecutar o mesmo importId não duplica registros (CA-S07).
+model ImportRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  importId  String   @unique
+  hash      String
+  status    String   @default("aplicado")
+  summary   String?
+  createdAt DateTime @default(now())
+}
+
+// Trilha de auditoria — importações, exclusões e fechamento/reabertura de
+// competência (spec seção 15).
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  details    String?
+  createdAt  DateTime @default(now())
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowDownRight, ArrowUpRight, PiggyBank, Target, Wallet } from "lucide-react";
+import { AlertTriangle, ArrowDownRight, ArrowUpRight, HandCoins, PiggyBank, Target, Wallet } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { PageHeader } from "@/components/PageHeader";
 import { Card, ProgressBar, SectionTitle, StatCard, alertColor } from "@/components/ui";
@@ -57,7 +57,13 @@ export default async function DashboardPage({
           tag: "Obrigatório" as const,
         }
       : null,
-  ].filter((x): x is { label: string; valueCents: number; tag: "Obrigatório" } => x !== null);
+    ...data.adjustments.map((a) => ({ label: a.description, valueCents: a.amountCents, tag: "Ajuste do mês" as const })),
+  ].filter(
+    (x): x is { label: string; valueCents: number; tag: "Obrigatório" | "Ajuste do mês" } => x !== null
+  );
+
+  const acertosPendentes = data.personBalances.filter((p) => p.status === "pendente");
+  const acertosPendentesTotal = acertosPendentes.reduce((s, p) => s + p.netCents, 0);
 
   return (
     <AppShell>
@@ -75,6 +81,18 @@ export default async function DashboardPage({
         >
           <AlertTriangle size={18} className="shrink-0" />
           Informe a renda líquida de {monthLabel(year, month)} para ver a sobra prevista e o saldo do mês.
+        </Link>
+      )}
+
+      {acertosPendentes.length > 0 && (
+        <Link
+          href={`/acertos?y=${year}&m=${month}`}
+          className="mb-6 flex items-center gap-3 rounded-2xl border border-info/30 bg-info/10 px-5 py-3.5 text-sm text-info"
+        >
+          <HandCoins size={18} className="shrink-0" />
+          {acertosPendentesTotal >= 0
+            ? `Você tem ${centsToBRL(acertosPendentesTotal)} a pagar em acertos pendentes.`
+            : `Você tem ${centsToBRL(Math.abs(acertosPendentesTotal))} a receber em acertos pendentes.`}
         </Link>
       )}
 
@@ -149,6 +167,25 @@ export default async function DashboardPage({
         </Card>
       </div>
 
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-5 lg:mt-8">
+        <Link href={`/caixa?y=${year}&m=${month}`}>
+          <StatCard
+            icon={Wallet}
+            iconColor="#30d158"
+            label="Caixa disponível (não é renda)"
+            value={centsToBRL(data.cashAvailableCents)}
+          />
+        </Link>
+        <Link href={`/acertos?y=${year}&m=${month}`}>
+          <StatCard
+            icon={HandCoins}
+            iconColor="#ff9f0a"
+            label="Acertos pendentes"
+            value={acertosPendentes.length > 0 ? centsToSignedBRL(acertosPendentesTotal) : "—"}
+          />
+        </Link>
+      </div>
+
       <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-2">
         <Card>
           <SectionTitle
@@ -169,7 +206,11 @@ export default async function DashboardPage({
                   <span className="text-slate-300">{c.label}</span>
                   <span className="flex items-center gap-2">
                     <span className="font-medium text-slate-100">{centsToBRL(c.valueCents)}</span>
-                    <span className="rounded-full bg-bad/15 px-2 py-0.5 text-[11px] font-medium text-bad">
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                        c.tag === "Obrigatório" ? "bg-bad/15 text-bad" : "bg-warn/15 text-warn"
+                      }`}
+                    >
                       {c.tag}
                     </span>
                   </span>
