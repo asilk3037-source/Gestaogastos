@@ -97,35 +97,43 @@ export default async function DashboardPage({
       )}
 
       <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
-        <StatCard
-          icon={ArrowUpRight}
-          iconColor="#30d158"
-          label="Receita do mês"
-          value={centsToBRL(data.month.netIncomeCents)}
-        />
-        <StatCard
-          icon={ArrowDownRight}
-          iconColor="#ff3b30"
-          label="Total de gastos"
-          value={centsToBRL(gastoTotalMes)}
-        />
-        <StatCard
-          icon={Wallet}
-          iconColor="#0a84ff"
-          label="Saldo do mês"
-          value={data.summary.sobraReal != null ? centsToSignedBRL(data.summary.sobraReal) : "—"}
-          trend={
-            data.summary.sobraReal != null
-              ? { label: data.summary.sobraReal >= 0 ? "Positivo" : "Negativo", positive: data.summary.sobraReal >= 0 }
-              : undefined
-          }
-        />
-        <StatCard
-          icon={Target}
-          iconColor="#32ade6"
-          label="Teto de gastos novos"
-          value={`${percentLabel(tetoUsedPercent)}`}
-        />
+        <Link href={`/planejamento?y=${year}&m=${month}`}>
+          <StatCard
+            icon={ArrowUpRight}
+            iconColor="#30d158"
+            label="Receita do mês"
+            value={centsToBRL(data.month.netIncomeCents)}
+          />
+        </Link>
+        <Link href={`/relatorios?y=${year}&m=${month}`}>
+          <StatCard
+            icon={ArrowDownRight}
+            iconColor="#ff3b30"
+            label="Total de gastos"
+            value={centsToBRL(gastoTotalMes)}
+          />
+        </Link>
+        <Link href={`/metas?y=${year}&m=${month}`}>
+          <StatCard
+            icon={Wallet}
+            iconColor="#0a84ff"
+            label="Saldo do mês"
+            value={data.summary.sobraReal != null ? centsToSignedBRL(data.summary.sobraReal) : "—"}
+            trend={
+              data.summary.sobraReal != null
+                ? { label: data.summary.sobraReal >= 0 ? "Positivo" : "Negativo", positive: data.summary.sobraReal >= 0 }
+                : undefined
+            }
+          />
+        </Link>
+        <Link href={`/planejamento?y=${year}&m=${month}`}>
+          <StatCard
+            icon={Target}
+            iconColor="#32ade6"
+            label="Teto de gastos novos"
+            value={`${percentLabel(tetoUsedPercent)}`}
+          />
+        </Link>
       </div>
 
       <div className="mt-6 grid gap-6 lg:mt-8 lg:grid-cols-2">
