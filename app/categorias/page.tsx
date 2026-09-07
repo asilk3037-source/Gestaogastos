@@ -20,7 +20,7 @@ export default async function CategoriasPage() {
     <AppShell>
       <PageHeader title="Categorias" subtitle="Tetos padrão usados ao abrir uma nova competência." />
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
           <h2 className="mb-4 text-base font-semibold text-slate-100">+ Nova categoria</h2>
           <form action={createCategory} className="space-y-4">
