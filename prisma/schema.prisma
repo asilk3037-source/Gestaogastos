@@ -40,16 +40,20 @@ model User {
 // Uma competência (mês/ano). Criada sob demanda (virada de mês) — o sistema
 // não depende de meses pré-cadastrados; qualquer mês pode ser aberto.
 model Month {
-  id                 String    @id @default(cuid())
-  userId             String
-  user               User      @relation(fields: [userId], references: [id])
-  year               Int
-  month              Int // 1-12
-  netIncomeCents     Int? // renda líquida — nula até ser informada pela usuária
-  reserveTargetCents Int       @default(0)
-  status             String    @default("open") // open | closed
-  closedAt           DateTime?
-  createdAt          DateTime  @default(now())
+  id                  String    @id @default(cuid())
+  userId              String
+  user                User      @relation(fields: [userId], references: [id])
+  year                Int
+  month               Int // 1-12
+  netIncomeCents      Int? // renda líquida — nula até ser informada pela usuária
+  reserveTargetCents  Int       @default(0)
+  status              String    @default("open") // open | closed
+  closedAt            DateTime?
+  createdAt           DateTime  @default(now())
+  // true numa competência de implantação/conciliação (ex.: Setembro/2026, onde
+  // os lançamentos são um extrato retroativo, não gasto novo sob orçamento) —
+  // suprime alertas/cores de teto por categoria nessa competência específica.
+  skipCeilingTracking Boolean   @default(false)
 
   monthlyLimits  MonthlyLimit[]
   transactions   Transaction[]

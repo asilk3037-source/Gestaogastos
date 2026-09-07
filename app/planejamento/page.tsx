@@ -144,6 +144,13 @@ export default async function PlanejamentoPage({
 
       <Card className="mt-6 lg:mt-8">
         <SectionTitle>Tetos por categoria</SectionTitle>
+        {data.month.skipCeilingTracking && (
+          <p className="mb-4 -mt-2 text-xs text-slate-500">
+            Competência de implantação — estes lançamentos são o extrato retroativo de um mês
+            anterior, não gasto novo sob orçamento, então o teto não é avaliado aqui (sem alertas
+            de "atenção"/"excedido").
+          </p>
+        )}
         <div className="space-y-4">
           {data.categories.map((c) => (
             <div key={c.id} className="flex flex-col gap-3 border-b border-base-border/60 pb-4 last:border-0 last:pb-0 sm:flex-row sm:items-center">
@@ -157,7 +164,10 @@ export default async function PlanejamentoPage({
                     <span>{centsToBRL(c.saldoCents)} disponível</span>
                   </div>
                   <div className="mt-2 w-full max-w-xs">
-                    <ProgressBar percent={c.percentUsed} color={alertColor(c.alertLevel)} />
+                    <ProgressBar
+                      percent={c.percentUsed}
+                      color={data.month.skipCeilingTracking ? undefined : alertColor(c.alertLevel)}
+                    />
                   </div>
                 </div>
               </div>
